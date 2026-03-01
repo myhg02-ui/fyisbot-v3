@@ -244,15 +244,19 @@ def admin_panel():
             
             tokens_generados[token_nuevo] = token_info
             guardar_tokens()  # Persistir cambios
-            mensaje = f"Token {token_nuevo} creado exitosamente"
+            session['mensaje_admin'] = f"Token {token_nuevo} creado exitosamente"
+            return redirect(url_for('admin_panel'))
         
         elif accion == 'eliminar':
             token_eliminar = request.form.get('token_eliminar')
             if token_eliminar in tokens_generados:
                 del tokens_generados[token_eliminar]
                 guardar_tokens()  # Persistir cambios
-                mensaje = "Token eliminado"
+                session['mensaje_admin'] = "Token eliminado"
+            return redirect(url_for('admin_panel'))
     
+    # Obtener mensaje de la sesión y limpiarlo
+    mensaje = session.pop('mensaje_admin', None)
     return render_template('admin.html', tokens=tokens_generados, mensaje=mensaje)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
