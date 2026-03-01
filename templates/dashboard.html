@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FyisBot | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="fyis-card">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="color: var(--secondary); margin:0; font-size: 1.6rem; letter-spacing: 1px;">🎬 CÓDIGOS NETFLIX</h2>
+            <a href="/logout" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--primary);">Salir</a>
+        </div>
+        <form method="POST" class="search-container">
+            <div style="display: flex; gap: 10px;">
+                <input type="email" name="email" class="fyis-input" placeholder="Correo de la cuenta..." value="{{ last_email if last_email else '' }}" required>
+                <button type="submit" class="btn-buscar">BUSCAR</button>
+            </div>
+            {% if last_email %}
+                <button type="submit" class="btn-actualizar">
+                    <span>🔄</span> ACTUALIZAR BANDEJA
+                </button>
+            {% endif %}
+        </form>
+    </div>
+    <div id="results-list" style="width:100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 40px;">
+        {% if mails %}
+            {% for m in mails %}
+            <div class="mail-item-new">
+                <div class="mail-info">
+                    <div class="mail-subject">📧 {{ m.subject }}</div>
+                    <div class="mail-date">🕒 {{ m.date }}</div>
+                    {% if m.link %}
+                        <div class="mail-link-container">
+                            <a href="{{ m.link }}" target="_blank" class="mail-link">🔗 Acceder al Link</a>
+                        </div>
+                        <div class="mail-expiration {% if m.expiracion.expirado %}expirado{% endif %}">
+                            {% if m.expiracion.expirado %}
+                                ⚠️ Este link ya expiró
+                            {% else %}
+                                ⏱️ Expira en {{ m.expiracion.minutos_restantes }} minutos (a las {{ m.expiracion.hora_expiracion }})
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="mail-expiration" style="color: #ff6666;">
+                            ❌ No se encontró link en este correo
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% elif busqueda %}
+            <div style="background:rgba(255,0,127,0.15); border:2px solid var(--secondary); color:white; padding:20px; border-radius:20px; text-align:center; font-weight:bold; margin-top:20px; width: 90%; max-width: 500px;">
+                🚫 No se encontraron correos para este email en las últimas 24 horas.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

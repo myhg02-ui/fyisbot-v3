@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>FyisBot | Acceso</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="fyis-card">
+        <h1 style="color: #00f2ff; margin: 0;">🎬 FyisBot 🎬</h1>
+        <p style="color: #aaa; margin-top: 10px;">Ingresa tu Token de Acceso:</p>
+        {% if error %}
+        <div style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; padding: 10px; border-radius: 8px; margin: 15px 0; color: #ff6666;">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+        <form method="POST">
+            <input type="text" name="token" class="fyis-input" placeholder="Token de acceso..." required autofocus>
+            <button type="submit" class="fyis-btn">INGRESAR</button>
+        </form>
+    </div>
+</body>
+</html>

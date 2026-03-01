@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FyisBot | Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="fyis-card" style="max-width: 800px;">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="color: var(--secondary); margin:0; font-size: 1.6rem; letter-spacing: 1px;">⚙️ PANEL DE ADMINISTRACIÓN</h2>
+            <a href="/logout" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--primary);">Salir</a>
+        </div>
+
+        <!-- Formulario para crear nuevo token -->
+        <div class="admin-section">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">➕ Crear Nuevo Token</h3>
+            <form method="POST" class="token-form">
+                <input type="hidden" name="accion" value="crear">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #aaa; display: block; margin-bottom: 8px;">¿El token expira?</label>
+                    <select name="expira" id="expira-select" class="fyis-input" onchange="toggleExpiracion()">
+                        <option value="no">No expira</option>
+                        <option value="si">Sí, expira</option>
+                    </select>
+                </div>
+
+                <div id="dias-container" style="display: none; margin-bottom: 15px;">
+                    <label style="color: #aaa; display: block; margin-bottom: 8px;">Días hasta expiración:</label>
+                    <input type="number" name="dias" class="fyis-input" value="7" min="1">
+                </div>
+
+                <button type="submit" class="fyis-btn">GENERAR TOKEN</button>
+            </form>
+        </div>
+
+        <!-- Lista de tokens -->
+        <div class="admin-section" style="margin-top: 30px;">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">📋 Tokens Generados ({{ tokens|length }})</h3>
+            
+            {% if tokens %}
+                <div class="tokens-list">
+                    {% for token, data in tokens.items() %}
+                    <div class="token-item">
+                        <div class="token-info">
+                            <div class="token-code">🔑 {{ token }}</div>
+                            <div class="token-details">
+                                <span>📅 Creado: {{ data.creado }}</span>
+                                {% if data.expira %}
+                                    <span style="color: var(--secondary);">⏰ Expira en {{ data.dias }} días</span>
+                                {% else %}
+                                    <span style="color: #00ff88;">♾️ No expira</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <form method="POST" style="display: inline;">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <input type="hidden" name="token_eliminar" value="{{ token }}">
+                            <button type="submit" class="btn-eliminar" onclick="return confirm('¿Seguro que quieres eliminar este token?')">🗑️</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px; color: #aaa;">
+                    No hay tokens generados aún
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function toggleExpiracion() {
+            const select = document.getElementById('expira-select');
+            const container = document.getElementById('dias-container');
+            container.style.display = select.value === 'si' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

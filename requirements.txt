@@ -1,0 +1,5 @@
+flask
+pytz
+beautifulsoup4
+python-dotenv
+gunicorn
