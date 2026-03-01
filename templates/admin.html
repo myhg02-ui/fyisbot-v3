@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FyisBot | Admin Panel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -18,6 +19,12 @@
             <h3 style="color: var(--primary); margin-bottom: 15px;">➕ Crear Nuevo Token</h3>
             <form method="POST" class="token-form">
                 <input type="hidden" name="accion" value="crear">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #aaa; display: block; margin-bottom: 8px;">Token Personalizado (opcional):</label>
+                    <input type="text" name="token_personalizado" class="fyis-input" placeholder="Deja vacío para generar uno aleatorio">
+                    <small style="color: #888; display: block; margin-top: 5px;">💡 Si no escribes nada, se generará un token de 8 caracteres automáticamente</small>
+                </div>
                 
                 <div style="margin-bottom: 15px;">
                     <label style="color: #aaa; display: block; margin-bottom: 8px;">¿El token expira?</label>
@@ -70,6 +77,12 @@
                 </div>
             {% endif %}
         </div>
+
+        {% if mensaje %}
+        <div style="margin-top: 20px; padding: 15px; background: rgba(70, 211, 105, 0.2); border: 2px solid var(--primary); border-radius: 10px; color: var(--primary); text-align: center;">
+            {{ mensaje }}
+        </div>
+        {% endif %}
     </div>
 
     <script>

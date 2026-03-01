@@ -173,7 +173,14 @@ def admin_panel():
         accion = request.form.get('accion')
         
         if accion == 'crear':
-            token_nuevo = secrets.token_hex(4)  # Token de 8 caracteres
+            # Permitir token personalizado o generar uno aleatorio
+            token_nuevo = request.form.get('token_personalizado', '').strip()
+            if not token_nuevo:
+                token_nuevo = secrets.token_hex(4)  # Token de 8 caracteres
+            elif token_nuevo in tokens_generados:
+                mensaje = f"⚠️ El token '{token_nuevo}' ya existe. Usa otro."
+                return render_template('admin.html', tokens=tokens_generados, mensaje=mensaje)
+            
             expira = request.form.get('expira') == 'si'
             
             token_info = {
@@ -190,12 +197,14 @@ def admin_panel():
                 token_info['dias'] = dias
             
             tokens_generados[token_nuevo] = token_info
+            guardar_tokens()  # Persistir cambios
             mensaje = f"Token {token_nuevo} creado exitosamente"
         
         elif accion == 'eliminar':
             token_eliminar = request.form.get('token_eliminar')
             if token_eliminar in tokens_generados:
                 del tokens_generados[token_eliminar]
+                guardar_tokens()  # Persistir cambios
                 mensaje = "Token eliminado"
     
     return render_template('admin.html', tokens=tokens_generados, mensaje=mensaje)

@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>FyisBot | Acceso</title>
+    <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -27,7 +28,7 @@
         // Crear partículas flotantes
         const particlesContainer = document.getElementById('particles');
         const colors = ['#46d369', '#e50914', '#ffffff'];
-        
+
         function createParticle() {
             const particle = document.createElement('div');
             particle.className = 'particle';
@@ -36,13 +37,13 @@
             particle.style.animationDelay = Math.random() * 2 + 's';
             particle.style.background = colors[Math.floor(Math.random() * colors.length)];
             particlesContainer.appendChild(particle);
-            
+
             setTimeout(() => particle.remove(), 8000);
         }
-        
+
         // Generar partículas continuamente
         setInterval(createParticle, 300);
-        
+
         // Crear partículas iniciales
         for(let i = 0; i < 20; i++) {
             setTimeout(createParticle, i * 100);
@@ -54,7 +55,7 @@
             0%, 100% { text-shadow: 0 0 20px rgba(70, 211, 105, 0.5); }
             50% { text-shadow: 0 0 40px rgba(70, 211, 105, 0.8), 0 0 60px rgba(70, 211, 105, 0.6); }
         }
-        
+
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
