@@ -7,10 +7,88 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Botón Tutorial (Burbuja flotante) -->
+    <button class="tutorial-btn" onclick="openTutorial()">?</button>
+
+    <!-- Modal Tutorial -->
+    <div class="tutorial-modal" id="tutorialModal">
+        <div class="tutorial-content">
+            <button class="tutorial-close" onclick="closeTutorial()">&times;</button>
+            
+            <!-- Paso 1: Verificación -->
+            <div class="tutorial-step active" id="step1">
+                <h3>📺 Tutorial de Verificación</h3>
+                <p style="color: #aaa; margin-bottom: 20px;">Por favor, presiona el dispositivo que estás usando para continuar:</p>
+                <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
+                    TV
+                </button>
+                <button onclick="showStep('step2-mobile')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
+                    Celular, Tablet, otros...
+                </button>
+            </div>
+
+            <!-- Paso 2: Instrucciones para TV -->
+            <div class="tutorial-step" id="step2-tv">
+                <h3>📺 Instrucciones para TV</h3>
+                <p style="color: #aaa;">En tu TV, verás una pantalla similar a esta:</p>
+                <ul>
+                    <li><strong style="color: var(--netflix-green);">Recomendado:</strong> Presiona <strong>"Estoy de Viaje"</strong> (te enviará un código).</li>
+                    <li>Otra opción: <strong>"Actualizar hogar"</strong> (te enviará un link).</li>
+                    <li>Selecciona <strong>"Enviar email"</strong>.</li>
+                </ul>
+                <div class="tutorial-success">
+                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
+                </div>
+                <div class="tutorial-nav">
+                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-next" onclick="showStep('step3')">Listo</button>
+                </div>
+            </div>
+
+            <!-- Paso 2: Instrucciones para Móvil -->
+            <div class="tutorial-step" id="step2-mobile">
+                <h3>📱 Instrucciones para Móvil</h3>
+                <p style="color: #aaa;">En tu dispositivo móvil u otros, verás una pantalla similar a esta:</p>
+                <ul>
+                    <li>Presiona <strong>"Ver Temporalmente"</strong>.</li>
+                    <li>Selecciona <strong>"Enviar email"</strong>.</li>
+                </ul>
+                <div class="tutorial-success">
+                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
+                </div>
+                <div class="tutorial-nav">
+                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-next" onclick="showStep('step3')">Listo</button>
+                </div>
+            </div>
+
+            <!-- Paso 3: Resultado -->
+            <div class="tutorial-step" id="step3">
+                <h3>✅ Perfecto</h3>
+                <p style="color: #aaa;">Ahora recibirás un correo de Netflix con:</p>
+                <ul>
+                    <li><strong style="color: var(--netflix-green);">"Estoy de Viaje"</strong> → Link que contiene código de 4 dígitos</li>
+                    <li><strong style="color: var(--netflix-green);">"Actualizar hogar"</strong> → Link de verificación directo</li>
+                </ul>
+                <p style="color: #aaa; margin-top: 20px;">Regresa a la página principal e ingresa tu correo para consultar el link automáticamente.</p>
+                <div class="tutorial-warning">
+                    ⚠️ <strong>Importante:</strong> Este enlace vence en 15 minutos.
+                </div>
+                <div class="tutorial-success" style="margin-top: 15px;">
+                    ⏱️ El sistema busca correos recibidos en los últimos 15 minutos.
+                </div>
+                <div class="tutorial-nav">
+                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-close-tutorial" onclick="closeTutorial()">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="fyis-card">
         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="color: var(--secondary); margin:0; font-size: 1.6rem; letter-spacing: 1px;">🎬 CÓDIGOS NETFLIX</h2>
-            <a href="/logout" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--primary);">Salir</a>
+            <h2 style="color: var(--netflix-green); margin:0; font-size: 1.6rem; letter-spacing: 1px;">🎬 CÓDIGOS NETFLIX</h2>
+            <a href="/logout" style="color:var(--netflix-red); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--netflix-red);">Salir</a>
         </div>
         <form method="POST" class="search-container">
             <div style="display: flex; gap: 10px;">
@@ -51,10 +129,34 @@
             </div>
             {% endfor %}
         {% elif busqueda %}
-            <div style="background:rgba(255,0,127,0.15); border:2px solid var(--secondary); color:white; padding:20px; border-radius:20px; text-align:center; font-weight:bold; margin-top:20px; width: 90%; max-width: 500px;">
+            <div style="background:rgba(229, 9, 20, 0.2); border:2px solid var(--netflix-red); color:white; padding:20px; border-radius:16px; text-align:center; font-weight:bold; margin-top:20px; width: 90%; max-width: 500px;">
                 🚫 No se encontraron correos para este email en las últimas 24 horas.
             </div>
         {% endif %}
     </div>
+
+    <script>
+        function openTutorial() {
+            document.getElementById('tutorialModal').classList.add('active');
+            showStep('step1');
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorialModal').classList.remove('active');
+        }
+
+        function showStep(stepId) {
+            const steps = document.querySelectorAll('.tutorial-step');
+            steps.forEach(step => step.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        // Cerrar modal si se hace clic fuera del contenido
+        document.getElementById('tutorialModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTutorial();
+            }
+        });
+    </script>
 </body>
 </html>
