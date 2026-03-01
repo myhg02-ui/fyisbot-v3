@@ -102,7 +102,7 @@
             {% endif %}
         </form>
     </div>
-    <div id="results-list" style="width:100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 40px;">
+    <div id="results-list" style="width:100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 40px; max-width: 100%; overflow-x: hidden;">
         {% if mails %}
             {% for m in mails %}
             <div class="mail-item-new">

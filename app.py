@@ -167,6 +167,8 @@ def admin_panel():
     if not session.get('is_admin'):
         return redirect(url_for('login'))
     
+    mensaje = None
+    
     if request.method == 'POST':
         accion = request.form.get('accion')
         
@@ -188,13 +190,15 @@ def admin_panel():
                 token_info['dias'] = dias
             
             tokens_generados[token_nuevo] = token_info
+            mensaje = f"Token {token_nuevo} creado exitosamente"
         
         elif accion == 'eliminar':
             token_eliminar = request.form.get('token_eliminar')
             if token_eliminar in tokens_generados:
                 del tokens_generados[token_eliminar]
+                mensaje = "Token eliminado"
     
-    return render_template('admin.html', tokens=tokens_generados)
+    return render_template('admin.html', tokens=tokens_generados, mensaje=mensaje)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
