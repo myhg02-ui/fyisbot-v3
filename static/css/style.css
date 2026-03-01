@@ -15,7 +15,7 @@ body {
     align-items: center;
     flex-direction: column;
     color: white;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
                 url('fyis.png') no-repeat center center fixed;
     background-size: cover;
 }
@@ -27,9 +27,9 @@ body {
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--light-glass);
     border-radius: 28px;
-    padding: 40px;
+    padding: 50px 60px;
     width: 90%;
-    max-width: 500px;
+    max-width: 650px;
     text-align: center;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease;
