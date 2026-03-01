@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FyisBot | Dashboard</title>
+    <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- Partículas animadas -->
+    <!-- PartÃ­culas animadas -->
     <div class="particles" id="particles"></div>
 
-    <!-- Botón Tutorial (Burbuja flotante) -->
+    <!-- BotÃ³n Tutorial (Burbuja flotante) -->
     <button class="tutorial-btn" onclick="openTutorial()">?</button>
 
     <!-- Modal Tutorial -->
@@ -18,10 +19,10 @@
         <div class="tutorial-content">
             <button class="tutorial-close" onclick="closeTutorial()">&times;</button>
             
-            <!-- Paso 1: Verificación -->
+            <!-- Paso 1: VerificaciÃ³n -->
             <div class="tutorial-step active" id="step1">
-                <h3>📺 Tutorial de Verificación</h3>
-                <p style="color: #aaa; margin-bottom: 20px;">Por favor, presiona el dispositivo que estás usando para continuar:</p>
+                <h3>ðŸ“º Tutorial de VerificaciÃ³n</h3>
+                <p style="color: #aaa; margin-bottom: 20px;">Por favor, presiona el dispositivo que estÃ¡s usando para continuar:</p>
                 <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
                     TV
                 </button>
@@ -32,53 +33,53 @@
 
             <!-- Paso 2: Instrucciones para TV -->
             <div class="tutorial-step" id="step2-tv">
-                <h3>📺 Instrucciones para TV</h3>
-                <p style="color: #aaa;">En tu TV, verás una pantalla similar a esta:</p>
+                <h3>ðŸ“º Instrucciones para TV</h3>
+                <p style="color: #aaa;">En tu TV, verÃ¡s una pantalla similar a esta:</p>
                 <ul>
-                    <li><strong style="color: var(--netflix-green);">Recomendado:</strong> Presiona <strong>"Estoy de Viaje"</strong> (te enviará un código).</li>
-                    <li>Otra opción: <strong>"Actualizar hogar"</strong> (te enviará un link).</li>
+                    <li><strong style="color: var(--netflix-green);">Recomendado:</strong> Presiona <strong>"Estoy de Viaje"</strong> (te enviarÃ¡ un cÃ³digo).</li>
+                    <li>Otra opciÃ³n: <strong>"Actualizar hogar"</strong> (te enviarÃ¡ un link).</li>
                     <li>Selecciona <strong>"Enviar email"</strong>.</li>
                 </ul>
                 <div class="tutorial-success">
-                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
+                    âœ… Cuando hayas enviado el email, presiona el botÃ³n "Listo".
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">â† Volver</button>
                     <button class="btn-next" onclick="showStep('step3')">Listo</button>
                 </div>
             </div>
 
-            <!-- Paso 2: Instrucciones para Móvil -->
+            <!-- Paso 2: Instrucciones para MÃ³vil -->
             <div class="tutorial-step" id="step2-mobile">
-                <h3>📱 Instrucciones para Móvil</h3>
-                <p style="color: #aaa;">En tu dispositivo móvil u otros, verás una pantalla similar a esta:</p>
+                <h3>ðŸ“± Instrucciones para MÃ³vil</h3>
+                <p style="color: #aaa;">En tu dispositivo mÃ³vil u otros, verÃ¡s una pantalla similar a esta:</p>
                 <ul>
                     <li>Presiona <strong>"Ver Temporalmente"</strong>.</li>
                     <li>Selecciona <strong>"Enviar email"</strong>.</li>
                 </ul>
                 <div class="tutorial-success">
-                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
+                    âœ… Cuando hayas enviado el email, presiona el botÃ³n "Listo".
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">â† Volver</button>
                     <button class="btn-next" onclick="showStep('step3')">Listo</button>
                 </div>
             </div>
 
             <!-- Paso 3: Resultado -->
             <div class="tutorial-step" id="step3">
-                <h3>✅ Perfecto</h3>
-                <p style="color: #aaa;">Ahora recibirás un correo de Netflix con un <strong style="color: var(--netflix-green);">link que contiene el código de 4 dígitos</strong> para verificar tu dispositivo.</p>
-                <p style="color: #aaa; margin-top: 15px;">Si estás en TV y elegiste "Actualizar hogar", recibirás un link de verificación directo.</p>
-                <p style="color: #aaa; margin-top: 20px;">Regresa a la página principal e ingresa tu correo para consultar el link automáticamente.</p>
+                <h3>âœ… Perfecto</h3>
+                <p style="color: #aaa;">Ahora recibirÃ¡s un correo de Netflix con un <strong style="color: var(--netflix-green);">link que contiene el cÃ³digo de 4 dÃ­gitos</strong> para verificar tu dispositivo.</p>
+                <p style="color: #aaa; margin-top: 15px;">Si estÃ¡s en TV y elegiste "Actualizar hogar", recibirÃ¡s un link de verificaciÃ³n directo.</p>
+                <p style="color: #aaa; margin-top: 20px;">Regresa a la pÃ¡gina principal e ingresa tu correo para consultar el link automÃ¡ticamente.</p>
                 <div class="tutorial-warning">
-                    ⚠️ <strong>Importante:</strong> Este enlace vence en 15 minutos.
+                    âš ï¸ <strong>Importante:</strong> Este enlace vence en 15 minutos.
                 </div>
                 <div class="tutorial-success" style="margin-top: 15px;">
-                    ⏱️ El sistema busca correos recibidos en los últimos 15 minutos.
+                    â±ï¸ El sistema busca correos recibidos en los Ãºltimos 15 minutos.
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">â† Volver</button>
                     <button class="btn-close-tutorial" onclick="closeTutorial()">Entendido</button>
                 </div>
             </div>
@@ -87,7 +88,7 @@
 
     <div class="fyis-card">
         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="color: var(--netflix-green); margin:0; font-size: 1.6rem; letter-spacing: 1px;">🎬 CÓDIGOS NETFLIX</h2>
+            <h2 style="color: var(--netflix-green); margin:0; font-size: 1.6rem; letter-spacing: 1px;">ðŸŽ¬ CÃ“DIGOS NETFLIX</h2>
             <a href="/logout" style="color:var(--netflix-red); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--netflix-red);">Salir</a>
         </div>
         <form method="POST" class="search-container">
@@ -97,7 +98,7 @@
             </div>
             {% if last_email %}
                 <button type="submit" class="btn-actualizar">
-                    <span>🔄</span> ACTUALIZAR BANDEJA
+                    <span>ðŸ”„</span> ACTUALIZAR BANDEJA
                 </button>
             {% endif %}
         </form>
@@ -107,22 +108,22 @@
             {% for m in mails %}
             <div class="mail-item-new">
                 <div class="mail-info">
-                    <div class="mail-subject">📧 {{ m.subject }}</div>
-                    <div class="mail-date">🕒 {{ m.date }}</div>
+                    <div class="mail-subject">ðŸ“§ {{ m.subject }}</div>
+                    <div class="mail-date">ðŸ•’ {{ m.date }}</div>
                     {% if m.link %}
                         <div class="mail-link-container">
-                            <a href="{{ m.link }}" target="_blank" class="mail-link">🔗 Acceder al Link</a>
+                            <a href="{{ m.link }}" target="_blank" class="mail-link">ðŸ”— Acceder al Link</a>
                         </div>
                         <div class="mail-expiration {% if m.expiracion.expirado %}expirado{% endif %}">
                             {% if m.expiracion.expirado %}
-                                ⚠️ Este link ya expiró
+                                âš ï¸ Este link ya expirÃ³
                             {% else %}
-                                ⏱️ Expira en {{ m.expiracion.minutos_restantes }} minutos (a las {{ m.expiracion.hora_expiracion }})
+                                â±ï¸ Expira en {{ m.expiracion.minutos_restantes }} minutos (a las {{ m.expiracion.hora_expiracion }})
                             {% endif %}
                         </div>
                     {% else %}
                         <div class="mail-expiration" style="color: #ff6666;">
-                            ❌ No se encontró link en este correo
+                            âŒ No se encontrÃ³ link en este correo
                         </div>
                     {% endif %}
                 </div>
@@ -130,13 +131,13 @@
             {% endfor %}
         {% elif busqueda %}
             <div style="background:rgba(229, 9, 20, 0.2); border:2px solid var(--netflix-red); color:white; padding:20px; border-radius:16px; text-align:center; font-weight:bold; margin-top:20px; width: 90%; max-width: 500px;">
-                🚫 No se encontraron correos para este email en las últimas 24 horas.
+                ðŸš« No se encontraron correos para este email en las Ãºltimas 24 horas.
             </div>
         {% endif %}
     </div>
 
     <script>
-        // Crear partículas flotantes
+        // Crear partÃ­culas flotantes
         const particlesContainer = document.getElementById('particles');
         const colors = ['#46d369', '#e50914', '#ffffff'];
         
@@ -152,10 +153,10 @@
             setTimeout(() => particle.remove(), 8000);
         }
         
-        // Generar partículas continuamente
+        // Generar partÃ­culas continuamente
         setInterval(createParticle, 300);
         
-        // Crear partículas iniciales
+        // Crear partÃ­culas iniciales
         for(let i = 0; i < 20; i++) {
             setTimeout(createParticle, i * 100);
         }
@@ -184,3 +185,4 @@
     </script>
 </body>
 </html>
+
