@@ -28,8 +28,17 @@ MAPEO_CORREOS = {
 # Archivo para persistir tokens
 TOKENS_FILE = 'tokens_data.json'
 
-# Cargar tokens desde archivo
+# Cargar tokens desde variable de entorno o archivo
 def cargar_tokens():
+    # Primero intentar cargar desde variable de entorno (para Vercel)
+    tokens_env = os.getenv('FYIS_TOKENS')
+    if tokens_env:
+        try:
+            return json.loads(tokens_env)
+        except:
+            pass
+    
+    # Si no hay en variable de entorno, intentar desde archivo local
     try:
         if os.path.exists(TOKENS_FILE):
             with open(TOKENS_FILE, 'r') as f:
@@ -38,16 +47,31 @@ def cargar_tokens():
         pass
     return {}
 
-# Guardar tokens en archivo
+# Guardar tokens (solo en archivo local, en Vercel usar variable de entorno)
 def guardar_tokens():
     try:
         with open(TOKENS_FILE, 'w') as f:
             json.dump(tokens_generados, f, indent=2)
+        # Imprimir para que puedas copiar y pegar en Vercel
+        print("="*50)
+        print("TOKENS ACTUALIZADOS - Copia esto en Vercel como FYIS_TOKENS:")
+        print(json.dumps(tokens_generados, indent=2))
+        print("="*50)
     except Exception as e:
         print(f"Error guardando tokens: {e}")
 
 # Almacenamiento de tokens generados (persistente)
 tokens_generados = cargar_tokens()
+
+# Asegurar que exista el token por defecto
+if 'code02' not in tokens_generados:
+    tokens_generados['code02'] = {
+        'token': 'code02',
+        'creado': datetime.now().strftime('%d/%m/%Y %I:%M %p'),
+        'expira': False,
+        'usado': 0
+    }
+    guardar_tokens()
 
 ASUNTOS_NETFLIX = [
     "Netflix: Tu código de inicio de sesión",
