@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Partículas animadas -->
+    <div class="particles" id="particles"></div>
+
     <!-- Botón Tutorial (Burbuja flotante) -->
     <button class="tutorial-btn" onclick="openTutorial()">?</button>
 
@@ -133,6 +136,30 @@
     </div>
 
     <script>
+        // Crear partículas flotantes
+        const particlesContainer = document.getElementById('particles');
+        const colors = ['#46d369', '#e50914', '#ffffff'];
+        
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particlesContainer.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 8000);
+        }
+        
+        // Generar partículas continuamente
+        setInterval(createParticle, 300);
+        
+        // Crear partículas iniciales
+        for(let i = 0; i < 20; i++) {
+            setTimeout(createParticle, i * 100);
+        }
+
         function openTutorial() {
             document.getElementById('tutorialModal').classList.add('active');
             showStep('step1');

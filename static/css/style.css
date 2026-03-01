@@ -17,26 +17,119 @@ body {
     align-items: center;
     flex-direction: column;
     color: white;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.75)), 
-                url('fyis.png') no-repeat center top;
-    background-size: contain;
-    background-position: center 20%;
+    background: #0a0a0a;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fondo con imagen con opacidad */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('fyis.png') no-repeat center center;
+    background-size: cover;
+    opacity: 0.15;
+    z-index: 0;
+}
+
+/* Overlay gradient */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(70, 211, 105, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+    z-index: 1;
+}
+
+/* Partículas flotantes */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--netflix-green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--netflix-green);
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Asegurar que el contenido esté sobre las animaciones */
+.fyis-card {
+    position: relative;
+    z-index: 10;
 }
 
 /* --- CONTENEDORES --- */
 .fyis-card {
-    background: var(--dark-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 2px solid rgba(70, 211, 105, 0.3);
-    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 2px solid rgba(70, 211, 105, 0.4);
+    border-radius: 20px;
     padding: 50px 60px;
     width: 90%;
     max-width: 700px;
     text-align: center;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(70, 211, 105, 0.2);
-    transition: transform 0.3s ease;
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.8), 
+        0 0 40px rgba(70, 211, 105, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
     position: relative;
+    animation: cardEntrance 0.8s ease;
+}
+
+.fyis-card:hover {
+    border-color: rgba(70, 211, 105, 0.6);
+    box-shadow: 
+        0 35px 70px rgba(0, 0, 0, 0.9), 
+        0 0 60px rgba(70, 211, 105, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* --- INPUTS Y BOTONES --- */
@@ -124,19 +217,37 @@ body {
     width: 90%;
     max-width: 600px;
     margin-top: 20px;
-    background: var(--dark-glass);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--light-glass);
-    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(70, 211, 105, 0.3);
+    border-radius: 16px;
     padding: 25px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-    transition: 0.3s;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(70, 211, 105, 0.15);
+    transition: all 0.3s ease;
+    animation: slideIn 0.5s ease;
+    position: relative;
+    z-index: 10;
 }
 
 .mail-item-new:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 20px 45px rgba(0, 242, 255, 0.3);
+    border-color: rgba(70, 211, 105, 0.6);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(70, 211, 105, 0.4);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .mail-info {

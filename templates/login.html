@@ -6,11 +6,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Partículas animadas -->
+    <div class="particles" id="particles"></div>
+
     <div class="fyis-card">
-        <h1 style="color: #46d369; margin: 0; text-shadow: 0 0 20px rgba(70, 211, 105, 0.5);">🎬 FyisBot 🎬</h1>
+        <h1 style="color: #46d369; margin: 0; text-shadow: 0 0 20px rgba(70, 211, 105, 0.5); animation: glow 2s ease-in-out infinite;">🎬 FyisBot 🎬</h1>
         <p style="color: #aaa; margin-top: 10px;">Ingresa tu Token de Acceso:</p>
         {% if error %}
-        <div style="background: rgba(229, 9, 20, 0.3); border: 2px solid #e50914; padding: 12px; border-radius: 8px; margin: 15px 0; color: #ff6666;">
+        <div style="background: rgba(229, 9, 20, 0.3); border: 2px solid #e50914; padding: 12px; border-radius: 8px; margin: 15px 0; color: #ff6666; animation: shake 0.5s ease;">
             ⚠️ {{ error }}
         </div>
         {% endif %}
@@ -19,5 +22,44 @@
             <button type="submit" class="fyis-btn">INGRESAR</button>
         </form>
     </div>
+
+    <script>
+        // Crear partículas flotantes
+        const particlesContainer = document.getElementById('particles');
+        const colors = ['#46d369', '#e50914', '#ffffff'];
+        
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particlesContainer.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 8000);
+        }
+        
+        // Generar partículas continuamente
+        setInterval(createParticle, 300);
+        
+        // Crear partículas iniciales
+        for(let i = 0; i < 20; i++) {
+            setTimeout(createParticle, i * 100);
+        }
+    </script>
+
+    <style>
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(70, 211, 105, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(70, 211, 105, 0.8), 0 0 60px rgba(70, 211, 105, 0.6); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
 </body>
 </html>
