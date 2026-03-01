@@ -17,7 +17,7 @@ body {
     align-items: center;
     flex-direction: column;
     color: white;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
                 url('fyis.png') no-repeat center center fixed;
     background-size: cover;
 }
