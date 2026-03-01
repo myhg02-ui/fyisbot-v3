@@ -63,15 +63,16 @@ def guardar_tokens():
 # Almacenamiento de tokens generados (persistente)
 tokens_generados = cargar_tokens()
 
-# Asegurar que exista el token por defecto
-if 'code02' not in tokens_generados:
-    tokens_generados['code02'] = {
-        'token': 'code02',
-        'creado': datetime.now().strftime('%d/%m/%Y %I:%M %p'),
-        'expira': False,
-        'usado': 0
+# Inicializar con token por defecto si está vacío
+if not tokens_generados:
+    tokens_generados = {
+        'code02': {
+            'token': 'code02',
+            'creado': '28/02/2026 12:00 PM',
+            'expira': False,
+            'usado': 0
+        }
     }
-    guardar_tokens()
 
 ASUNTOS_NETFLIX = [
     "Netflix: Tu código de inicio de sesión",
