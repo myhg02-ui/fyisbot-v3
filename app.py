@@ -25,8 +25,29 @@ MAPEO_CORREOS = {
     "netflix7473@mypemx.com": "mhg91984@gmail.com"
 }
 
-# Almacenamiento de tokens generados (en producción, usar base de datos)
-tokens_generados = {}
+# Archivo para persistir tokens
+TOKENS_FILE = 'tokens_data.json'
+
+# Cargar tokens desde archivo
+def cargar_tokens():
+    try:
+        if os.path.exists(TOKENS_FILE):
+            with open(TOKENS_FILE, 'r') as f:
+                return json.load(f)
+    except:
+        pass
+    return {}
+
+# Guardar tokens en archivo
+def guardar_tokens():
+    try:
+        with open(TOKENS_FILE, 'w') as f:
+            json.dump(tokens_generados, f, indent=2)
+    except Exception as e:
+        print(f"Error guardando tokens: {e}")
+
+# Almacenamiento de tokens generados (persistente)
+tokens_generados = cargar_tokens()
 
 ASUNTOS_NETFLIX = [
     "Netflix: Tu código de inicio de sesión",
@@ -178,7 +199,7 @@ def admin_panel():
             if not token_nuevo:
                 token_nuevo = secrets.token_hex(4)  # Token de 8 caracteres
             elif token_nuevo in tokens_generados:
-                mensaje = f"⚠️ El token '{token_nuevo}' ya existe. Usa otro."
+                mensaje = f"El token '{token_nuevo}' ya existe. Usa otro."
                 return render_template('admin.html', tokens=tokens_generados, mensaje=mensaje)
             
             expira = request.form.get('expira') == 'si'
