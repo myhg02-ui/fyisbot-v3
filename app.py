@@ -152,6 +152,8 @@ def login():
             if token_data['expira']:
                 if datetime.now() > datetime.fromisoformat(token_data['fecha_expiracion']):
                     return render_template('login.html', error="Token expirado")
+            # Incrementar contador de usos
+            tokens_generados[token]['usado'] = tokens_generados[token].get('usado', 0) + 1
             session['auth'] = True
             session['is_admin'] = False
             session['token'] = token

@@ -48,6 +48,7 @@
                             <div class="token-code">🔑 {{ token }}</div>
                             <div class="token-details">
                                 <span>📅 Creado: {{ data.creado }}</span>
+                                <span style="color: var(--netflix-green);">✓ Usado: {{ data.get('usado', 0) }} veces</span>
                                 {% if data.expira %}
                                     <span style="color: var(--secondary);">⏰ Expira en {{ data.dias }} días</span>
                                 {% else %}
