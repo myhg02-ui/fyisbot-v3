@@ -158,6 +158,47 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(229, 9, 20, 0.2);
+            border-top: 4px solid #e50914;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: #e50914;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
         
         .inbox-header {
@@ -589,16 +630,22 @@
             <div class="search-area">
                 <h2 class="search-title">🔍 Buscar Códigos</h2>
                 
-                <form method="POST" class="search-form">
+                <form id="searchForm" class="search-form">
                     <div class="input-group">
-                        <label class="input-label">Correo de la cuenta Netflix:</label>
-                        <input type="email" name="email" class="input-field" 
-                               placeholder="ejemplo@correo.com" 
-                               value="{{ last_email if last_email else '' }}" 
-                               required>
+                        <label class="input-label">Selecciona el correo:</label>
+                        <select name="email" id="emailSelect" class="input-field" required>
+                            <option value="">-- Selecciona un correo --</option>
+                            <option value="karolombardi@mypemx.com">karolombardi@mypemx.com</option>
+                            <option value="eduardo@mypemx.com">eduardo@mypemx.com</option>
+                            <option value="netflix00800@mypemx.com">netflix00800@mypemx.com</option>
+                            <option value="netflix09002@mypemx.com">netflix09002@mypemx.com</option>
+                            <option value="netflix66333@mypemx.com">netflix66333@mypemx.com</option>
+                            <option value="netflix8330@mypemx.com">netflix8330@mypemx.com</option>
+                            <option value="netflix7473@mypemx.com">netflix7473@mypemx.com</option>
+                        </select>
                     </div>
                     
-                    <button type="submit" class="submit-btn">Buscar</button>
+                    <button type="submit" class="submit-btn" id="searchBtn">Buscar</button>
                 </form>
                 
                 <div class="info-box">
@@ -612,6 +659,13 @@
         
         <!-- Panel derecho: Bandeja -->
         <div class="right-panel">
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+                <div class="loading-text">Buscando correos...</div>
+            </div>
+            
+            <div id="inboxContent">
             {% if mails %}
                 <div class="inbox-header">
                     <div class="inbox-title">
@@ -660,13 +714,75 @@
                 <div class="empty-state">
                     <div class="empty-icon">📭</div>
                     <h3 class="empty-title">No hay correos</h3>
-                    <p class="empty-text">No se encontraron correos para {{ last_email }}</p>
+                    <p class="empty-text">Selecciona un correo en el panel izquierdo</p>
                 </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Búsqueda AJAX sin recargar página
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('emailSelect').value;
+            const searchBtn = document.getElementById('searchBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const inboxContent = document.getElementById('inboxContent');
+            
+            if (!email) {
+                alert('Por favor selecciona un correo');
+                return;
+            }
+            
+            // Mostrar loading
+            loadingOverlay.classList.add('active');
+            searchBtn.disabled = true;
+            searchBtn.textContent = 'Buscando...';
+            
+            try {
+                // Enviar petición AJAX
+                const formData = new FormData();
+                formData.append('email', email);
                 
-            {% else %}
-                <div class="empty-state">
-                    <div class="empty-icon">📬</div>
-                    <h3 class="empty-title">Bandeja de Correos</h3>
+                const response = await fetch('{{ url_for("dashboard") }}', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const html = await response.text();
+                    
+                    // Extraer solo el contenido de la bandeja
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newContent = doc.getElementById('inboxContent');
+                    
+                    if (newContent) {
+                        inboxContent.innerHTML = newContent.innerHTML;
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                inboxContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <h3 class="empty-title">Error</h3>
+                        <p class="empty-text">No se pudo buscar correos. Intenta de nuevo.</p>
+                    </div>
+                `;
+            } finally {
+                // Ocultar loading
+                setTimeout(() => {
+                    loadingOverlay.classList.remove('active');
+                    searchBtn.disabled = false;
+                    searchBtn.textContent = 'Buscar';
+                }, 500);
+            }
+        });
+        
+        // Tutorial functions        <h3 class="empty-title">Bandeja de Correos</h3>
                     <p class="empty-text">Ingresa un correo en el panel izquierdo</p>
                 </div>
             {% endif %}
