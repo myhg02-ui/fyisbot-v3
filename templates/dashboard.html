@@ -742,26 +742,43 @@
             searchBtn.textContent = 'Buscando...';
             
             try {
-                // Enviar petición AJAX
-                const formData = new FormData();
+                // Enviar petición POST tradicional
+                const formData = new URLSearchParams();
                 formData.append('email', email);
                 
-                const response = await fetch('{{ url_for("dashboard") }}', {
+                const response = await fetch('/dashboard', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
                     body: formData
                 });
                 
                 if (response.ok) {
                     const html = await response.text();
                     
-                    // Extraer solo el contenido de la bandeja
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const newContent = doc.getElementById('inboxContent');
+                    // Crear un elemento temporal para parsear el HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    
+                    // Extraer el contenido de inboxContent
+                    const newContent = tempDiv.querySelector('#inboxContent');
                     
                     if (newContent) {
+                        // Reemplazar el contenido
                         inboxContent.innerHTML = newContent.innerHTML;
+                    } else {
+                        // Si no hay contenido, mostrar mensaje
+                        inboxContent.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-icon">📭</div>
+                                <h3 class="empty-title">No hay correos</h3>
+                                <p class="empty-text">No se encontraron correos para ${email}</p>
+                            </div>
+                        `;
                     }
+                } else {
+                    throw new Error('Error en la respuesta');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -773,12 +790,12 @@
                     </div>
                 `;
             } finally {
-                // Ocultar loading
+                // Ocultar loading después de un breve delay
                 setTimeout(() => {
                     loadingOverlay.classList.remove('active');
                     searchBtn.disabled = false;
                     searchBtn.textContent = 'Buscar';
-                }, 500);
+                }, 800);
             }
         });
         
