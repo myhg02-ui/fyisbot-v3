@@ -3,50 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FyisBot | Acceso</title>
+    <title>FyisTV | Acceso</title>
     <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         body {
-            background: #141414;
+            background: linear-gradient(135deg, #000000 0%, #1a0000 50%, #000000 100%);
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .login-container {
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .login-logo {
-            font-size: 3rem;
-            margin-bottom: 10px;
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .login-title {
             color: #e50914;
-            margin: 0 0 10px 0;
-            font-size: 2rem;
-            font-weight: 700;
+            margin: 0 0 5px 0;
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #e50914, #ff0a16);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .login-subtitle {
-            color: #999;
-            margin: 0 0 30px 0;
-            font-size: 0.95rem;
+            color: #b3b3b3;
+            margin: 0 0 40px 0;
+            font-size: 1rem;
+            font-weight: 300;
         }
         
         .error-box {
-            background: rgba(229, 9, 20, 0.15);
-            border: 1px solid rgba(229, 9, 20, 0.5);
-            padding: 12px;
-            border-radius: 4px;
-            margin: 0 0 20px 0;
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid rgba(229, 9, 20, 0.6);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 0 0 25px 0;
             color: #ff6666;
             display: flex;
             align-items: center;
             gap: 10px;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .fyis-card {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(229, 9, 20, 0.5);
+            box-shadow: 0 25px 60px rgba(229, 9, 20, 0.3);
         }
     </style>
 </head>
 <body>
-    <div class="fyis-card">
-        <div class="login-logo">🎬</div>
-        <h1 class="login-title">FyisBot</h1>
-        <p class="login-subtitle">Ingresa tu Token de Acceso</p>
+    <div class="fyis-card login-container">
+        <div class="login-logo">📺</div>
+        <h1 class="login-title">FyisTV</h1>
+        <p class="login-subtitle">Centro de Gestión Netflix</p>
         
         {% if error %}
         <div class="error-box">
@@ -55,10 +103,19 @@
         </div>
         {% endif %}
         
-        <form method="POST">
+        <form method="POST" id="loginForm">
             <input type="text" name="token" class="fyis-input" placeholder="Token de acceso..." required autofocus autocomplete="off">
-            <button type="submit" class="fyis-btn">INGRESAR</button>
+            <button type="submit" class="fyis-btn">ACCEDER</button>
         </form>
     </div>
+    
+    <script>
+        // Transición suave al enviar
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const btn = this.querySelector('.fyis-btn');
+            btn.textContent = 'VERIFICANDO...';
+            btn.style.background = '#b20710';
+        });
+    </script>
 </body>
 </html>

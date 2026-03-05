@@ -7,222 +7,302 @@
     <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        body {
-            padding: 0;
-            align-items: stretch;
-            flex-direction: row;
-        }
-        
-        /* Layout de 2 columnas */
-        .dashboard-container {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-            position: relative;
-        }
-        
-        /* Panel izquierdo - Búsqueda */
-        .search-panel {
-            width: 400px;
-            background: rgba(20, 20, 20, 0.98);
-            border-right: 2px solid rgba(229, 9, 20, 0.3);
-            padding: 40px 30px;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 100;
-            transition: transform 0.3s ease;
-        }
-        
-        .search-panel.collapsed {
-            transform: translateX(-400px);
-        }
-        
-        /* Panel derecho - Resultados */
-        .results-panel {
-            flex: 1;
-            margin-left: 400px;
-            padding: 40px;
-            overflow-y: auto;
-            transition: margin-left 0.3s ease;
-        }
-        
-        .results-panel.expanded {
-            margin-left: 0;
-        }
-        
-        /* Header del panel de búsqueda */
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        
-        .panel-title {
-            color: var(--netflix-red);
-            font-size: 1.8rem;
-            font-weight: 700;
+        * {
             margin: 0;
-            letter-spacing: 0.5px;
-        }
-        
-        .logout-btn {
-            background: transparent;
-            border: 1px solid rgba(229, 9, 20, 0.5);
-            color: var(--netflix-red);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .logout-btn:hover {
-            background: var(--netflix-red);
-            color: white;
-        }
-        
-        /* Formulario de búsqueda */
-        .search-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-label {
-            color: #999;
-            font-size: 0.9rem;
-            margin-bottom: -8px;
-            text-align: left;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 4px;
-            border: 1px solid rgba(128, 128, 128, 0.4);
-            background: rgba(51, 51, 51, 0.7);
-            color: white;
-            font-size: 1rem;
-            transition: 0.2s;
-            outline: none;
+            padding: 0;
             box-sizing: border-box;
         }
         
-        .search-input:focus {
-            border-color: #fff;
-            background: rgba(51, 51, 51, 0.9);
+        body {
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            animation: pageLoad 0.8s ease;
         }
         
-        .search-btn {
-            background: var(--netflix-red);
-            border: none;
-            padding: 14px;
-            border-radius: 4px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.2s;
-            text-transform: uppercase;
+        @keyframes pageLoad {
+            from {
+                opacity: 0;
+                filter: blur(10px);
+            }
+            to {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+        
+        /* Header superior */
+        .top-header {
+            background: linear-gradient(180deg, rgba(20,20,20,0.98) 0%, rgba(20,20,20,0.95) 100%);
+            border-bottom: 1px solid rgba(229, 9, 20, 0.3);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .brand-logo {
+            font-size: 2rem;
+        }
+        
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #e50914, #ff0a16);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             letter-spacing: 1px;
         }
         
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .status-indicator {
+            padding: 6px 14px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .logout-link {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid rgba(229, 9, 20, 0.6);
+            border-radius: 6px;
+            color: #e50914;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .logout-link:hover {
+            background: #e50914;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Contenedor principal */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Sección de búsqueda */
+        .search-section {
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.15), rgba(229, 9, 20, 0.05));
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+        
+        .search-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: 700;
+        }
+        
+        .search-subtitle {
+            color: #999;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 16px 20px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: #e50914;
+            background: rgba(30, 30, 30, 0.95);
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+        }
+        
+        .search-btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, #e50914, #b20710);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
         .search-btn:hover {
-            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
         }
         
         .refresh-btn {
+            padding: 16px 30px;
             background: transparent;
-            border: 1px solid var(--netflix-red);
-            padding: 12px;
-            border-radius: 4px;
-            color: var(--netflix-red);
+            border: 1px solid #e50914;
+            border-radius: 8px;
+            color: #e50914;
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.2s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
         }
         
         .refresh-btn:hover {
-            background: var(--netflix-red);
-            color: white;
-        }
-        
-        /* Info box */
-        .info-box {
             background: rgba(229, 9, 20, 0.1);
-            border-left: 3px solid var(--netflix-red);
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 30px;
-            color: #ccc;
-            font-size: 0.85rem;
-            line-height: 1.6;
+            transform: translateY(-2px);
         }
         
         /* Bandeja de correos */
+        .inbox-section {
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+        
         .inbox-header {
-            background: rgba(20, 20, 20, 0.95);
-            border: 1px solid rgba(229, 9, 20, 0.3);
-            border-radius: 4px;
-            padding: 25px;
-            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(229, 9, 20, 0.3);
         }
         
         .inbox-title {
-            color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin: 0;
+            color: #fff;
             display: flex;
             align-items: center;
             gap: 12px;
         }
         
         .inbox-count {
-            background: var(--netflix-red);
-            color: white;
-            padding: 4px 14px;
+            background: linear-gradient(135deg, #e50914, #b20710);
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
         }
         
-        .mail-card {
-            background: rgba(20, 20, 20, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-left: 3px solid var(--netflix-red);
-            border-radius: 4px;
-            padding: 25px;
-            margin-bottom: 15px;
-            transition: all 0.2s ease;
-            animation: slideInRight 0.4s ease;
+        /* Tarjetas de correo mejoradas */
+        .mail-item {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 4px solid #e50914;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 0.5s ease;
         }
         
-        .mail-card:hover {
-            background: rgba(30, 30, 30, 0.95);
-            border-left-width: 5px;
-            transform: translateX(5px);
+        .mail-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(229, 9, 20, 0.1), transparent);
+            transition: left 0.6s;
         }
         
-        @keyframes slideInRight {
+        .mail-item:hover::before {
+            left: 100%;
+        }
+        
+        .mail-item:hover {
+            border-left-width: 6px;
+            transform: translateX(8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, rgba(35, 35, 35, 0.95), rgba(25, 25, 25, 0.95));
+        }
+        
+        @keyframes slideInLeft {
             from {
                 opacity: 0;
-                transform: translateX(50px);
+                transform: translateX(-50px);
             }
             to {
                 opacity: 1;
@@ -235,26 +315,33 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 12px;
-            gap: 15px;
+            gap: 20px;
         }
         
         .mail-subject {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            color: white;
+            color: #fff;
             flex: 1;
+            line-height: 1.4;
         }
         
-        .mail-date {
+        .mail-time {
             font-size: 0.85rem;
-            color: var(--netflix-gray);
+            color: #999;
             white-space: nowrap;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
         }
         
-        .mail-preview {
-            color: #999;
+        .mail-from {
             font-size: 0.9rem;
+            color: #b3b3b3;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .mail-actions {
@@ -262,133 +349,307 @@
             gap: 12px;
             align-items: center;
             flex-wrap: wrap;
+            margin-top: 18px;
         }
         
-        .mail-link-btn {
-            background: var(--netflix-red);
-            padding: 10px 20px;
-            border-radius: 4px;
+        .mail-link {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e50914, #b20710);
+            border: none;
+            border-radius: 8px;
             color: white;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: 0.2s;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
         }
         
-        .mail-link-btn:hover {
-            background: var(--secondary);
-            transform: scale(1.02);
+        .mail-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(229, 9, 20, 0.5);
         }
         
-        .mail-status {
+        .badge {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 500;
         }
         
-        .status-valid {
-            background: rgba(0, 128, 0, 0.2);
+        .badge-valid {
+            background: rgba(76, 175, 80, 0.2);
             color: #4CAF50;
-            border: 1px solid rgba(0, 128, 0, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
         
-        .status-expiring {
-            background: rgba(255, 165, 0, 0.2);
-            color: #FFA500;
-            border: 1px solid rgba(255, 165, 0, 0.3);
+        .badge-expiring {
+            background: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+            border: 1px solid rgba(255, 152, 0, 0.3);
         }
         
-        .status-expired {
+        .badge-expired {
             background: rgba(229, 9, 20, 0.2);
             color: #ff6666;
-            border: 1px solid rgba(229, 9, 20, 0.5);
+            border: 1px solid rgba(229, 9, 20, 0.4);
         }
         
+        /* Estado vacío */
         .empty-state {
             text-align: center;
-            padding: 80px 20px;
-            color: #666;
+            padding: 80px 30px;
+            animation: fadeIn 0.8s ease;
         }
         
         .empty-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            opacity: 0.3;
+            font-size: 6rem;
+            margin-bottom: 25px;
+            opacity: 0.2;
         }
         
         .empty-title {
-            font-size: 1.5rem;
-            color: #999;
-            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: #b3b3b3;
         }
         
-        .empty-message {
+        .empty-text {
             color: #666;
-            margin: 0;
+            font-size: 1rem;
         }
         
         /* Tutorial button */
-        .tutorial-btn {
+        .help-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background: var(--netflix-red);
+            bottom: 35px;
+            right: 35px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e50914, #b20710);
             border: none;
             border-radius: 50%;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.5);
-            transition: 0.2s;
+            box-shadow: 0 6px 25px rgba(229, 9, 20, 0.5);
+            transition: all 0.3s;
+            z-index: 999;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
         }
         
-        .tutorial-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(229, 9, 20, 0.7);
+        .help-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 35px rgba(229, 9, 20, 0.7);
+        }
+        
+        /* Tutorial Modal */
+        .tutorial-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tutorial-modal.active {
+            display: flex;
+        }
+        
+        .tutorial-content {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border: 2px solid rgba(229, 9, 20, 0.5);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            animation: modalAppear 0.3s ease;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .tutorial-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #999;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tutorial-close:hover {
+            color: #e50914;
+            transform: rotate(90deg);
+        }
+        
+        .tutorial-step {
+            display: none;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .tutorial-step h3 {
+            color: #e50914;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .tutorial-step ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tutorial-step li {
+            padding: 12px 0;
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .tutorial-success {
+            background: rgba(76, 175, 80, 0.15);
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+        
+        .tutorial-warning {
+            background: rgba(229, 9, 20, 0.15);
+            border-left: 4px solid #e50914;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            color: #ff6666;
+        }
+        
+        .tutorial-nav {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .tutorial-nav button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .btn-prev, .btn-next {
+            background: #e50914;
+            color: white;
+        }
+        
+        .btn-prev:hover, .btn-next:hover {
+            background: #b20710;
+            transform: translateY(-2px);
+        }
+        
+        .btn-close-tutorial {
+            background: transparent;
+            border: 1px solid #666;
+            color: #999;
+        }
+        
+        .btn-close-tutorial:hover {
+            background: rgba(229, 9, 20, 0.1);
+            border-color: #e50914;
+            color: #e50914;
         }
         
         /* Responsive */
-        @media (max-width: 900px) {
-            .dashboard-container {
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 15px 20px;
+            }
+            
+            .brand-name {
+                font-size: 1.2rem;
+            }
+            
+            .main-container {
+                padding: 20px;
+            }
+            
+            .search-form {
                 flex-direction: column;
             }
             
-            .search-panel {
-                width: 100%;
-                position: relative;
-                height: auto;
-                border-right: none;
-                border-bottom: 2px solid rgba(229, 9, 20, 0.3);
-            }
-            
-            .results-panel {
-                margin-left: 0;
-                padding: 20px;
+            .search-input {
+                min-width: 100%;
             }
             
             .mail-header {
                 flex-direction: column;
+                gap: 10px;
+            }
+            
+            .mail-time {
+                align-self: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Tutorial Button -->
-    <button class="tutorial-btn" onclick="openTutorial()">?</button>
+    <!-- Header -->
+    <header class="top-header">
+        <div class="brand">
+            <span class="brand-logo">🎬</span>
+            <span class="brand-name">FYISBOT</span>
+        </div>
+        <div class="header-actions">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>Conectado</span>
+            </div>
+            <a href="/logout" class="logout-link">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <!-- Help Button -->
+    <button class="help-btn" onclick="openTutorial()">?</button>
 
     <!-- Tutorial Modal -->
     <div class="tutorial-modal" id="tutorialModal">
@@ -396,82 +657,74 @@
             <button class="tutorial-close" onclick="closeTutorial()">&times;</button>
             
             <div class="tutorial-step active" id="step1">
-                <h3>📺 Tutorial de Verificación</h3>
+                <h3>📺 ¿Cómo funciona?</h3>
                 <p style="color: #aaa; margin-bottom: 20px;">Selecciona tu dispositivo:</p>
-                <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 8px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
-                    TV
+                <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.2); border: 2px solid #e50914; border-radius: 8px; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+                    📺 TV
                 </button>
-                <button onclick="showStep('step2-mobile')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 8px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
-                    Celular / Tablet
+                <button onclick="showStep('step2-mobile')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.2); border: 2px solid #e50914; border-radius: 8px; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+                    📱 Celular / Tablet
                 </button>
             </div>
 
             <div class="tutorial-step" id="step2-tv">
-                <h3>📺 Instrucciones para TV</h3>
-                <p style="color: #aaa;">En tu TV:</p>
+                <h3>📺 Para TV</h3>
                 <ul>
-                    <li><strong style="color: var(--netflix-red);">Recomendado:</strong> "Estoy de Viaje"</li>
-                    <li>Otra opción: "Actualizar hogar"</li>
-                    <li>Selecciona "Enviar email"</li>
+                    <li>✓ Selecciona "Estoy de Viaje" o "Actualizar hogar"</li>
+                    <li>✓ Elige "Enviar email"</li>
+                    <li>✓ Busca el correo aquí</li>
                 </ul>
                 <div class="tutorial-success">
-                    ✅ Luego busca el correo aquí
+                    El código llegará en menos de 1 minuto
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">← Atrás</button>
                     <button class="btn-next" onclick="showStep('step3')">Siguiente</button>
                 </div>
             </div>
 
             <div class="tutorial-step" id="step2-mobile">
-                <h3>📱 Instrucciones para Móvil</h3>
-                <p style="color: #aaa;">En tu dispositivo:</p>
+                <h3>📱 Para Móvil</h3>
                 <ul>
-                    <li>Presiona "Ver Temporalmente"</li>
-                    <li>Selecciona "Enviar email"</li>
+                    <li>✓ Presiona "Ver Temporalmente"</li>
+                    <li>✓ Selecciona "Enviar email"</li>
+                    <li>✓ Busca el correo aquí</li>
                 </ul>
                 <div class="tutorial-success">
-                    ✅ Luego busca el correo aquí
+                    El código llegará en menos de 1 minuto
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">← Atrás</button>
                     <button class="btn-next" onclick="showStep('step3')">Siguiente</button>
                 </div>
             </div>
 
             <div class="tutorial-step" id="step3">
-                <h3>✅ Listo</h3>
-                <p style="color: #aaa;">Recibirás un correo con el <strong style="color: var(--netflix-red);">código de 4 dígitos</strong> o un link de verificación.</p>
+                <h3>✅ ¡Listo!</h3>
+                <p style="color: #aaa;">Recibirás un correo con el código de 4 dígitos o link de verificación.</p>
                 <div class="tutorial-warning">
-                    ⚠️ <strong>Importante:</strong> El enlace expira en 15 minutos.
+                    ⚠️ Los enlaces expiran en 15 minutos
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
-                    <button class="btn-close-tutorial" onclick="closeTutorial()">Entendido</button>
+                    <button class="btn-prev" onclick="showStep('step1')">← Atrás</button>
+                    <button class="btn-close-tutorial" onclick="closeTutorial()">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="dashboard-container">
-        <!-- Panel de búsqueda izquierdo -->
-        <div class="search-panel">
-            <div class="panel-header">
-                <h1 class="panel-title">🎬 FyisBot</h1>
-                <a href="/logout" class="logout-btn">Salir</a>
-            </div>
-            
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Search Section -->
+        <div class="search-section">
+            <h2 class="search-title">🔍 Buscar Códigos Netflix</h2>
+            <p class="search-subtitle">Ingresa el correo de la cuenta para buscar códigos de verificación</p>
             <form method="POST" class="search-form">
-                <label class="form-label">Correo de la cuenta Netflix:</label>
                 <input type="email" name="email" class="search-input" 
                        placeholder="ejemplo@correo.com" 
                        value="{{ last_email if last_email else '' }}" 
                        required>
-                
-                <button type="submit" class="search-btn">
-                    🔍 Buscar Correos
-                </button>
-                
+                <button type="submit" class="search-btn">Buscar</button>
                 {% if last_email %}
                 <button type="submit" class="refresh-btn">
                     <span>🔄</span>
@@ -479,81 +732,69 @@
                 </button>
                 {% endif %}
             </form>
-            
-            <div class="info-box">
-                <strong>💡 Información</strong><br>
-                • El sistema busca correos de Netflix<br>
-                • Muestra códigos de verificación<br>
-                • Los links expiran en 15 minutos<br>
-                • Auto-actualización cada 30 segundos
-            </div>
         </div>
-        
-        <!-- Panel de resultados derecho -->
-        <div class="results-panel">
-            {% if mails %}
-                <div class="inbox-header">
-                    <div class="inbox-title">
-                        📬 Bandeja de Entrada
-                        <span class="inbox-count">{{ mails|length }}</span>
-                    </div>
+
+        <!-- Inbox Section -->
+        {% if mails %}
+        <div class="inbox-section">
+            <div class="inbox-header">
+                <h2 class="inbox-title">
+                    📬 Bandeja de Entrada
+                    <span class="inbox-count">{{ mails|length }}</span>
+                </h2>
+            </div>
+            
+            {% for m in mails %}
+            <div class="mail-item" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                <div class="mail-header">
+                    <div class="mail-subject">{{ m.subject }}</div>
+                    <div class="mail-time">{{ m.date }}</div>
                 </div>
-                
-                {% for m in mails %}
-                <div class="mail-card" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
-                    <div class="mail-header">
-                        <div class="mail-subject">{{ m.subject }}</div>
-                        <div class="mail-date">🕐 {{ m.date }}</div>
-                    </div>
-                    <div class="mail-preview">
-                        Netflix • {{ m.bandeja }}
-                    </div>
-                    <div class="mail-actions">
-                        {% if m.link %}
-                            <a href="{{ m.link }}" target="_blank" class="mail-link-btn">
-                                🔗 Abrir Verificación
-                            </a>
-                            {% if m.expiracion.expirado %}
-                                <span class="mail-status status-expired">
-                                    ⚠️ Expirado
-                                </span>
-                            {% elif m.expiracion.minutos_restantes <= 5 %}
-                                <span class="mail-status status-expiring">
-                                    ⏱️ {{ m.expiracion.minutos_restantes }} min
-                                </span>
-                            {% else %}
-                                <span class="mail-status status-valid">
-                                    ✓ {{ m.expiracion.minutos_restantes }} min
-                                </span>
-                            {% endif %}
+                <div class="mail-from">
+                    📧 Netflix → {{ m.bandeja }}
+                </div>
+                <div class="mail-actions">
+                    {% if m.link %}
+                        <a href="{{ m.link }}" target="_blank" class="mail-link">
+                            🔗 Abrir Verificación
+                        </a>
+                        {% if m.expiracion.expirado %}
+                            <span class="badge badge-expired">
+                                ⚠️ Expirado
+                            </span>
+                        {% elif m.expiracion.minutos_restantes <= 5 %}
+                            <span class="badge badge-expiring">
+                                ⏱️ {{ m.expiracion.minutos_restantes }} minutos
+                            </span>
                         {% else %}
-                            <span class="mail-status status-expired">
-                                ❌ Sin link
+                            <span class="badge badge-valid">
+                                ✓ {{ m.expiracion.minutos_restantes }} minutos
                             </span>
                         {% endif %}
-                    </div>
+                    {% else %}
+                        <span class="badge badge-expired">
+                            ❌ Sin link
+                        </span>
+                    {% endif %}
                 </div>
-                {% endfor %}
-                
-            {% elif busqueda %}
-                <div class="empty-state">
-                    <div class="empty-icon">📭</div>
-                    <h2 class="empty-title">No hay correos</h2>
-                    <p class="empty-message">
-                        No se encontraron correos de Netflix para <strong>{{ last_email }}</strong>
-                    </p>
-                </div>
-                
-            {% else %}
-                <div class="empty-state">
-                    <div class="empty-icon">🎬</div>
-                    <h2 class="empty-title">Bienvenido a FyisBot</h2>
-                    <p class="empty-message">
-                        Ingresa un correo en el panel izquierdo para buscar códigos de Netflix
-                    </p>
-                </div>
-            {% endif %}
+            </div>
+            {% endfor %}
         </div>
+        
+        {% elif busqueda %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3 class="empty-title">No se encontraron correos</h3>
+            <p class="empty-text">No hay correos de Netflix para <strong>{{ last_email }}</strong></p>
+        </div>
+        
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🎬</div>
+            <h3 class="empty-title">Bienvenido a FyisBot</h3>
+            <p class="empty-text">Ingresa un correo para buscar códigos de verificación de Netflix</p>
+        </div>
+        {% endif %}
     </div>
 
     <script>
