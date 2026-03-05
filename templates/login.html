@@ -1,66 +1,66 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FyisBot | Acceso</title>
     <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <!-- Partículas animadas -->
-    <div class="particles" id="particles"></div>
-
-    <div class="fyis-card">
-        <h1 style="color: #46d369; margin: 0; text-shadow: 0 0 20px rgba(70, 211, 105, 0.5); animation: glow 2s ease-in-out infinite;">🎬 FyisBot 🎬</h1>
-        <p style="color: #aaa; margin-top: 10px;">Ingresa tu Token de Acceso:</p>
-        {% if error %}
-        <div style="background: rgba(229, 9, 20, 0.3); border: 2px solid #e50914; padding: 12px; border-radius: 8px; margin: 15px 0; color: #ff6666; animation: shake 0.5s ease;">
-            ⚠️ {{ error }}
-        </div>
-        {% endif %}
-        <form method="POST">
-            <input type="text" name="token" class="fyis-input" placeholder="Token de acceso..." required autofocus>
-            <button type="submit" class="fyis-btn">INGRESAR</button>
-        </form>
-    </div>
-
-    <script>
-        // Crear partículas flotantes
-        const particlesContainer = document.getElementById('particles');
-        const colors = ['#46d369', '#e50914', '#ffffff'];
-
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
-            particle.style.animationDelay = Math.random() * 2 + 's';
-            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-            particlesContainer.appendChild(particle);
-
-            setTimeout(() => particle.remove(), 8000);
-        }
-
-        // Generar partículas continuamente
-        setInterval(createParticle, 300);
-
-        // Crear partículas iniciales
-        for(let i = 0; i < 20; i++) {
-            setTimeout(createParticle, i * 100);
-        }
-    </script>
-
     <style>
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(70, 211, 105, 0.5); }
-            50% { text-shadow: 0 0 40px rgba(70, 211, 105, 0.8), 0 0 60px rgba(70, 211, 105, 0.6); }
+        /* Estilos minimalistas para login */
+        .login-logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(70, 211, 105, 0.4);
         }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+        
+        .login-title {
+            color: #46d369;
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .login-subtitle {
+            color: #aaa;
+            margin: 0 0 30px 0;
+            font-size: 0.95rem;
+        }
+        
+        .error-box {
+            background: rgba(229, 9, 20, 0.15);
+            border: 1px solid rgba(229, 9, 20, 0.5);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 0 0 20px 0;
+            color: #ff6666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
+</head>
+<body>
+    <div class="fyis-card">
+        <div class="login-logo">🎬</div>
+        <h1 class="login-title">FyisBot</h1>
+        <p class="login-subtitle">Ingresa tu Token de Acceso</p>
+        
+        {% if error %}
+        <div class="error-box">
+            <span>⚠️</span>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+        
+        <form method="POST">
+            <input type="text" name="token" class="fyis-input" placeholder="Token de acceso..." required autofocus autocomplete="off">
+            <button type="submit" class="fyis-btn">INGRESAR</button>
+        </form>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 0.85rem;">
+            <p style="margin: 0;">🔐 Token Admin: <code style="color: #888;">152028</code></p>
+        </div>
+    </div>
 </body>
 </html>

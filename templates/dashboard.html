@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -6,12 +6,196 @@
     <title>FyisBot | Dashboard</title>
     <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Estilos adicionales para bandeja de correos */
+        .inbox-container {
+            width: 95%;
+            max-width: 900px;
+            margin-top: 20px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid rgba(70, 211, 105, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        }
+        
+        .inbox-header {
+            background: linear-gradient(135deg, rgba(70, 211, 105, 0.2), rgba(229, 9, 20, 0.2));
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(70, 211, 105, 0.3);
+        }
+        
+        .inbox-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--netflix-green);
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .inbox-count {
+            background: var(--netflix-red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .inbox-body {
+            padding: 0;
+        }
+        
+        .mail-row {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .mail-row:hover {
+            background: rgba(70, 211, 105, 0.05);
+            border-left: 4px solid var(--netflix-green);
+            padding-left: 21px;
+        }
+        
+        .mail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .mail-row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .mail-subject-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .mail-date-text {
+            font-size: 0.85rem;
+            color: #888;
+            white-space: nowrap;
+        }
+        
+        .mail-preview {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .mail-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .mail-link-btn {
+            background: linear-gradient(90deg, var(--netflix-green), #3bc257);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mail-link-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(70, 211, 105, 0.4);
+        }
+        
+        .mail-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-valid {
+            background: rgba(70, 211, 105, 0.15);
+            color: var(--netflix-green);
+            border: 1px solid rgba(70, 211, 105, 0.3);
+        }
+        
+        .status-expiring {
+            background: rgba(255, 165, 0, 0.15);
+            color: #ffcc00;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+        
+        .status-expired {
+            background: rgba(229, 9, 20, 0.15);
+            color: #ff6666;
+            border: 1px solid rgba(229, 9, 20, 0.3);
+        }
+        
+        .empty-inbox {
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+        }
+        
+        .empty-inbox-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .search-form {
+            width: 100%;
+        }
+        
+        .search-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input-group input {
+            flex: 1;
+        }
+        
+        @media (max-width: 600px) {
+            .mail-row-header {
+                flex-direction: column;
+            }
+            
+            .mail-date-text {
+                align-self: flex-start;
+            }
+            
+            .mail-actions {
+                width: 100%;
+            }
+            
+            .mail-link-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- PartÃ­culas animadas -->
-    <div class="particles" id="particles"></div>
-
-    <!-- BotÃ³n Tutorial (Burbuja flotante) -->
+    <!-- Botón Tutorial -->
     <button class="tutorial-btn" onclick="openTutorial()">?</button>
 
     <!-- Modal Tutorial -->
@@ -19,10 +203,9 @@
         <div class="tutorial-content">
             <button class="tutorial-close" onclick="closeTutorial()">&times;</button>
             
-            <!-- Paso 1: VerificaciÃ³n -->
             <div class="tutorial-step active" id="step1">
-                <h3>ðŸ“º Tutorial de VerificaciÃ³n</h3>
-                <p style="color: #aaa; margin-bottom: 20px;">Por favor, presiona el dispositivo que estÃ¡s usando para continuar:</p>
+                <h3>📺 Tutorial de Verificación</h3>
+                <p style="color: #aaa; margin-bottom: 20px;">Por favor, presiona el dispositivo que estás usando para continuar:</p>
                 <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
                     TV
                 </button>
@@ -31,55 +214,52 @@
                 </button>
             </div>
 
-            <!-- Paso 2: Instrucciones para TV -->
             <div class="tutorial-step" id="step2-tv">
-                <h3>ðŸ“º Instrucciones para TV</h3>
-                <p style="color: #aaa;">En tu TV, verÃ¡s una pantalla similar a esta:</p>
+                <h3>📺 Instrucciones para TV</h3>
+                <p style="color: #aaa;">En tu TV, verás una pantalla similar a esta:</p>
                 <ul>
-                    <li><strong style="color: var(--netflix-green);">Recomendado:</strong> Presiona <strong>"Estoy de Viaje"</strong> (te enviarÃ¡ un cÃ³digo).</li>
-                    <li>Otra opciÃ³n: <strong>"Actualizar hogar"</strong> (te enviarÃ¡ un link).</li>
+                    <li><strong style="color: var(--netflix-green);">Recomendado:</strong> Presiona <strong>"Estoy de Viaje"</strong> (te enviará un código).</li>
+                    <li>Otra opción: <strong>"Actualizar hogar"</strong> (te enviará un link).</li>
                     <li>Selecciona <strong>"Enviar email"</strong>.</li>
                 </ul>
                 <div class="tutorial-success">
-                    âœ… Cuando hayas enviado el email, presiona el botÃ³n "Listo".
+                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">â† Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
                     <button class="btn-next" onclick="showStep('step3')">Listo</button>
                 </div>
             </div>
 
-            <!-- Paso 2: Instrucciones para MÃ³vil -->
             <div class="tutorial-step" id="step2-mobile">
-                <h3>ðŸ“± Instrucciones para MÃ³vil</h3>
-                <p style="color: #aaa;">En tu dispositivo mÃ³vil u otros, verÃ¡s una pantalla similar a esta:</p>
+                <h3>📱 Instrucciones para Móvil</h3>
+                <p style="color: #aaa;">En tu dispositivo móvil u otros, verás una pantalla similar a esta:</p>
                 <ul>
                     <li>Presiona <strong>"Ver Temporalmente"</strong>.</li>
                     <li>Selecciona <strong>"Enviar email"</strong>.</li>
                 </ul>
                 <div class="tutorial-success">
-                    âœ… Cuando hayas enviado el email, presiona el botÃ³n "Listo".
+                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">â† Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
                     <button class="btn-next" onclick="showStep('step3')">Listo</button>
                 </div>
             </div>
 
-            <!-- Paso 3: Resultado -->
             <div class="tutorial-step" id="step3">
-                <h3>âœ… Perfecto</h3>
-                <p style="color: #aaa;">Ahora recibirÃ¡s un correo de Netflix con un <strong style="color: var(--netflix-green);">link que contiene el cÃ³digo de 4 dÃ­gitos</strong> para verificar tu dispositivo.</p>
-                <p style="color: #aaa; margin-top: 15px;">Si estÃ¡s en TV y elegiste "Actualizar hogar", recibirÃ¡s un link de verificaciÃ³n directo.</p>
-                <p style="color: #aaa; margin-top: 20px;">Regresa a la pÃ¡gina principal e ingresa tu correo para consultar el link automÃ¡ticamente.</p>
+                <h3>✅ Perfecto</h3>
+                <p style="color: #aaa;">Ahora recibirás un correo de Netflix con un <strong style="color: var(--netflix-green);">link que contiene el código de 4 dígitos</strong> para verificar tu dispositivo.</p>
+                <p style="color: #aaa; margin-top: 15px;">Si estás en TV y elegiste "Actualizar hogar", recibirás un link de verificación directo.</p>
+                <p style="color: #aaa; margin-top: 20px;">Regresa a la página principal e ingresa tu correo para consultar el link automáticamente.</p>
                 <div class="tutorial-warning">
-                    âš ï¸ <strong>Importante:</strong> Este enlace vence en 15 minutos.
+                    ⚠️ <strong>Importante:</strong> Este enlace vence en 15 minutos.
                 </div>
                 <div class="tutorial-success" style="margin-top: 15px;">
-                    â±ï¸ El sistema busca correos recibidos en los Ãºltimos 15 minutos.
+                    ⏱️ El sistema busca correos recibidos en los últimos 15 minutos.
                 </div>
                 <div class="tutorial-nav">
-                    <button class="btn-prev" onclick="showStep('step1')">â† Volver</button>
+                    <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
                     <button class="btn-close-tutorial" onclick="closeTutorial()">Entendido</button>
                 </div>
             </div>
@@ -88,82 +268,82 @@
 
     <div class="fyis-card">
         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="color: var(--netflix-green); margin:0; font-size: 1.6rem; letter-spacing: 1px;">ðŸŽ¬ CÃ“DIGOS NETFLIX</h2>
+            <h2 style="color: var(--netflix-green); margin:0; font-size: 1.6rem; letter-spacing: 1px;">🎬 CÓDIGOS NETFLIX</h2>
             <a href="/logout" style="color:var(--netflix-red); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--netflix-red);">Salir</a>
         </div>
-        <form method="POST" class="search-container">
-            <div style="display: flex; gap: 10px;">
-                <input type="email" name="email" class="fyis-input" placeholder="Correo de la cuenta..." value="{{ last_email if last_email else '' }}" required>
+        <form method="POST" class="search-form">
+            <div class="search-input-group">
+                <input type="email" name="email" class="fyis-input" placeholder="Ingresa el correo de la cuenta Netflix..." value="{{ last_email if last_email else '' }}" required>
                 <button type="submit" class="btn-buscar">BUSCAR</button>
             </div>
             {% if last_email %}
                 <button type="submit" class="btn-actualizar">
-                    <span>ðŸ”„</span> ACTUALIZAR BANDEJA
+                    <span>🔄</span> ACTUALIZAR BANDEJA
                 </button>
             {% endif %}
         </form>
     </div>
-    <div id="results-list" style="width:100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 40px; max-width: 100%; overflow-x: hidden;">
-        {% if mails %}
+
+    {% if mails %}
+    <div class="inbox-container">
+        <div class="inbox-header">
+            <div class="inbox-title">
+                📬 Bandeja de Entrada
+                <span class="inbox-count">{{ mails|length }} correo{{ 's' if mails|length != 1 else '' }}</span>
+            </div>
+        </div>
+        <div class="inbox-body">
             {% for m in mails %}
-            <div class="mail-item-new">
-                <div class="mail-info">
-                    <div class="mail-subject">ðŸ“§ {{ m.subject }}</div>
-                    <div class="mail-date">ðŸ•’ {{ m.date }}</div>
+            <div class="mail-row">
+                <div class="mail-row-header">
+                    <div class="mail-subject-text">{{ m.subject }}</div>
+                    <div class="mail-date-text">🕐 {{ m.date }}</div>
+                </div>
+                <div class="mail-preview">
+                    Correo de verificación de Netflix • {{ m.bandeja }}
+                </div>
+                <div class="mail-actions">
                     {% if m.link %}
-                        <div class="mail-link-container">
-                            <a href="{{ m.link }}" target="_blank" class="mail-link">ðŸ”— Acceder al Link</a>
-                        </div>
-                        <div class="mail-expiration {% if m.expiracion.expirado %}expirado{% endif %}">
-                            {% if m.expiracion.expirado %}
-                                âš ï¸ Este link ya expirÃ³
-                            {% else %}
-                                â±ï¸ Expira en {{ m.expiracion.minutos_restantes }} minutos (a las {{ m.expiracion.hora_expiracion }})
-                            {% endif %}
-                        </div>
+                        <a href="{{ m.link }}" target="_blank" class="mail-link-btn">
+                            🔗 Abrir Link de Verificación
+                        </a>
+                        {% if m.expiracion.expirado %}
+                            <span class="mail-status status-expired">
+                                ⚠️ Link expirado
+                            </span>
+                        {% elif m.expiracion.minutos_restantes <= 5 %}
+                            <span class="mail-status status-expiring">
+                                ⏱️ Expira en {{ m.expiracion.minutos_restantes }} min
+                            </span>
+                        {% else %}
+                            <span class="mail-status status-valid">
+                                ✓ Válido por {{ m.expiracion.minutos_restantes }} min
+                            </span>
+                        {% endif %}
                     {% else %}
-                        <div class="mail-expiration" style="color: #ff6666;">
-                            âŒ No se encontrÃ³ link en este correo
-                        </div>
+                        <span class="mail-status status-expired">
+                            ❌ No se encontró link
+                        </span>
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
-        {% elif busqueda %}
-            <div style="background:rgba(229, 9, 20, 0.2); border:2px solid var(--netflix-red); color:white; padding:20px; border-radius:16px; text-align:center; font-weight:bold; margin-top:20px; width: 90%; max-width: 500px;">
-                ðŸš« No se encontraron correos para este email en las Ãºltimas 24 horas.
-            </div>
-        {% endif %}
+        </div>
     </div>
+    {% elif busqueda %}
+    <div class="inbox-container">
+        <div class="empty-inbox">
+            <div class="empty-inbox-icon">📭</div>
+            <h3 style="color: #888; margin: 0 0 10px 0;">No se encontraron correos</h3>
+            <p style="color: #666; margin: 0;">No hay correos de Netflix para <strong>{{ last_email }}</strong> en las últimas 24 horas.</p>
+        </div>
+    </div>
+    {% endif %}
 
     <script>
-        // Crear partÃ­culas flotantes
-        const particlesContainer = document.getElementById('particles');
-        const colors = ['#46d369', '#e50914', '#ffffff'];
-        
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
-            particle.style.animationDelay = Math.random() * 2 + 's';
-            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-            particlesContainer.appendChild(particle);
-            
-            setTimeout(() => particle.remove(), 8000);
-        }
-        
-        // Generar partÃ­culas continuamente
-        setInterval(createParticle, 300);
-        
-        // Crear partÃ­culas iniciales
-        for(let i = 0; i < 20; i++) {
-            setTimeout(createParticle, i * 100);
-        }
-
+        // Tutorial functions
         function openTutorial() {
             document.getElementById('tutorialModal').classList.add('active');
-            showStep('step1');
         }
 
         function closeTutorial() {
@@ -171,18 +351,27 @@
         }
 
         function showStep(stepId) {
-            const steps = document.querySelectorAll('.tutorial-step');
-            steps.forEach(step => step.classList.remove('active'));
+            document.querySelectorAll('.tutorial-step').forEach(step => {
+                step.classList.remove('active');
+            });
             document.getElementById(stepId).classList.add('active');
         }
 
-        // Cerrar modal si se hace clic fuera del contenido
-        document.getElementById('tutorialModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeTutorial();
+        // Auto-refresh cada 30 segundos si hay correo buscado
+        {% if last_email and mails %}
+        let refreshInterval = setInterval(() => {
+            const form = document.querySelector('form');
+            if (form) {
+                console.log('Auto-actualizando bandeja...');
+                form.submit();
             }
+        }, 30000); // 30 segundos
+
+        // Detener auto-refresh si el usuario sale de la página
+        window.addEventListener('beforeunload', () => {
+            clearInterval(refreshInterval);
         });
+        {% endif %}
     </script>
 </body>
 </html>
-
