@@ -7,104 +7,267 @@
     <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        /* Estilos adicionales para bandeja de correos */
-        .inbox-container {
-            width: 95%;
-            max-width: 900px;
-            margin-top: 20px;
-            background: rgba(15, 15, 15, 0.95);
-            border: 1px solid rgba(70, 211, 105, 0.3);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        body {
+            padding: 0;
+            align-items: stretch;
+            flex-direction: row;
         }
         
+        /* Layout de 2 columnas */
+        .dashboard-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Panel izquierdo - Búsqueda */
+        .search-panel {
+            width: 400px;
+            background: rgba(20, 20, 20, 0.98);
+            border-right: 2px solid rgba(229, 9, 20, 0.3);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        
+        .search-panel.collapsed {
+            transform: translateX(-400px);
+        }
+        
+        /* Panel derecho - Resultados */
+        .results-panel {
+            flex: 1;
+            margin-left: 400px;
+            padding: 40px;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .results-panel.expanded {
+            margin-left: 0;
+        }
+        
+        /* Header del panel de búsqueda */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .panel-title {
+            color: var(--netflix-red);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(229, 9, 20, 0.5);
+            color: var(--netflix-red);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .logout-btn:hover {
+            background: var(--netflix-red);
+            color: white;
+        }
+        
+        /* Formulario de búsqueda */
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-label {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: -8px;
+            text-align: left;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 4px;
+            border: 1px solid rgba(128, 128, 128, 0.4);
+            background: rgba(51, 51, 51, 0.7);
+            color: white;
+            font-size: 1rem;
+            transition: 0.2s;
+            outline: none;
+            box-sizing: border-box;
+        }
+        
+        .search-input:focus {
+            border-color: #fff;
+            background: rgba(51, 51, 51, 0.9);
+        }
+        
+        .search-btn {
+            background: var(--netflix-red);
+            border: none;
+            padding: 14px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .search-btn:hover {
+            background: var(--secondary);
+        }
+        
+        .refresh-btn {
+            background: transparent;
+            border: 1px solid var(--netflix-red);
+            padding: 12px;
+            border-radius: 4px;
+            color: var(--netflix-red);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--netflix-red);
+            color: white;
+        }
+        
+        /* Info box */
+        .info-box {
+            background: rgba(229, 9, 20, 0.1);
+            border-left: 3px solid var(--netflix-red);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 30px;
+            color: #ccc;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        
+        /* Bandeja de correos */
         .inbox-header {
-            background: linear-gradient(135deg, rgba(70, 211, 105, 0.2), rgba(229, 9, 20, 0.2));
-            padding: 20px 25px;
-            border-bottom: 1px solid rgba(70, 211, 105, 0.3);
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            border-radius: 4px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .inbox-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
             display: flex;
             align-items: center;
-            gap: 15px;
-            color: var(--netflix-green);
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin: 0;
+            gap: 12px;
         }
         
         .inbox-count {
             background: var(--netflix-red);
             color: white;
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 600;
         }
         
-        .inbox-body {
-            padding: 0;
-        }
-        
-        .mail-row {
-            padding: 20px 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        .mail-card {
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 3px solid var(--netflix-red);
+            border-radius: 4px;
+            padding: 25px;
+            margin-bottom: 15px;
             transition: all 0.2s ease;
-            cursor: pointer;
+            animation: slideInRight 0.4s ease;
         }
         
-        .mail-row:hover {
-            background: rgba(70, 211, 105, 0.05);
-            border-left: 4px solid var(--netflix-green);
-            padding-left: 21px;
+        .mail-card:hover {
+            background: rgba(30, 30, 30, 0.95);
+            border-left-width: 5px;
+            transform: translateX(5px);
         }
         
-        .mail-row:last-child {
-            border-bottom: none;
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
-        .mail-row-header {
+        .mail-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 10px;
+            margin-bottom: 12px;
+            gap: 15px;
         }
         
-        .mail-subject-text {
+        .mail-subject {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #fff;
+            color: white;
             flex: 1;
-            min-width: 200px;
         }
         
-        .mail-date-text {
+        .mail-date {
             font-size: 0.85rem;
-            color: #888;
+            color: var(--netflix-gray);
             white-space: nowrap;
         }
         
         .mail-preview {
-            color: #aaa;
+            color: #999;
             font-size: 0.9rem;
-            margin-bottom: 12px;
-            line-height: 1.4;
+            margin-bottom: 15px;
         }
         
         .mail-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
             flex-wrap: wrap;
         }
         
         .mail-link-btn {
-            background: linear-gradient(90deg, var(--netflix-green), #3bc257);
+            background: var(--netflix-red);
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 4px;
             color: white;
             text-decoration: none;
             font-weight: 600;
@@ -116,8 +279,8 @@
         }
         
         .mail-link-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(70, 211, 105, 0.4);
+            background: var(--secondary);
+            transform: scale(1.02);
         }
         
         .mail-status {
@@ -125,138 +288,162 @@
             align-items: center;
             gap: 6px;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 0.85rem;
             font-weight: 500;
         }
         
         .status-valid {
-            background: rgba(70, 211, 105, 0.15);
-            color: var(--netflix-green);
-            border: 1px solid rgba(70, 211, 105, 0.3);
+            background: rgba(0, 128, 0, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(0, 128, 0, 0.3);
         }
         
         .status-expiring {
-            background: rgba(255, 165, 0, 0.15);
-            color: #ffcc00;
+            background: rgba(255, 165, 0, 0.2);
+            color: #FFA500;
             border: 1px solid rgba(255, 165, 0, 0.3);
         }
         
         .status-expired {
-            background: rgba(229, 9, 20, 0.15);
+            background: rgba(229, 9, 20, 0.2);
             color: #ff6666;
-            border: 1px solid rgba(229, 9, 20, 0.3);
+            border: 1px solid rgba(229, 9, 20, 0.5);
         }
         
-        .empty-inbox {
-            padding: 60px 20px;
+        .empty-state {
             text-align: center;
+            padding: 80px 20px;
             color: #666;
         }
         
-        .empty-inbox-icon {
-            font-size: 4rem;
+        .empty-icon {
+            font-size: 5rem;
             margin-bottom: 20px;
             opacity: 0.3;
         }
         
-        .search-form {
-            width: 100%;
+        .empty-title {
+            font-size: 1.5rem;
+            color: #999;
+            margin: 0 0 10px 0;
         }
         
-        .search-input-group {
+        .empty-message {
+            color: #666;
+            margin: 0;
+        }
+        
+        /* Tutorial button */
+        .tutorial-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: var(--netflix-red);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.5);
+            transition: 0.2s;
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
         
-        .search-input-group input {
-            flex: 1;
+        .tutorial-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(229, 9, 20, 0.7);
         }
         
-        @media (max-width: 600px) {
-            .mail-row-header {
+        /* Responsive */
+        @media (max-width: 900px) {
+            .dashboard-container {
                 flex-direction: column;
             }
             
-            .mail-date-text {
-                align-self: flex-start;
+            .search-panel {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 2px solid rgba(229, 9, 20, 0.3);
             }
             
-            .mail-actions {
-                width: 100%;
+            .results-panel {
+                margin-left: 0;
+                padding: 20px;
             }
             
-            .mail-link-btn {
-                width: 100%;
-                justify-content: center;
+            .mail-header {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Botón Tutorial -->
+    <!-- Tutorial Button -->
     <button class="tutorial-btn" onclick="openTutorial()">?</button>
 
-    <!-- Modal Tutorial -->
+    <!-- Tutorial Modal -->
     <div class="tutorial-modal" id="tutorialModal">
         <div class="tutorial-content">
             <button class="tutorial-close" onclick="closeTutorial()">&times;</button>
             
             <div class="tutorial-step active" id="step1">
                 <h3>📺 Tutorial de Verificación</h3>
-                <p style="color: #aaa; margin-bottom: 20px;">Por favor, presiona el dispositivo que estás usando para continuar:</p>
-                <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
+                <p style="color: #aaa; margin-bottom: 20px;">Selecciona tu dispositivo:</p>
+                <button onclick="showStep('step2-tv')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 8px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
                     TV
                 </button>
-                <button onclick="showStep('step2-mobile')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 12px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
-                    Celular, Tablet, otros...
+                <button onclick="showStep('step2-mobile')" style="width: 100%; padding: 20px; margin: 10px 0; background: rgba(229, 9, 20, 0.3); border: 2px solid var(--netflix-red); border-radius: 8px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
+                    Celular / Tablet
                 </button>
             </div>
 
             <div class="tutorial-step" id="step2-tv">
                 <h3>📺 Instrucciones para TV</h3>
-                <p style="color: #aaa;">En tu TV, verás una pantalla similar a esta:</p>
+                <p style="color: #aaa;">En tu TV:</p>
                 <ul>
-                    <li><strong style="color: var(--netflix-green);">Recomendado:</strong> Presiona <strong>"Estoy de Viaje"</strong> (te enviará un código).</li>
-                    <li>Otra opción: <strong>"Actualizar hogar"</strong> (te enviará un link).</li>
-                    <li>Selecciona <strong>"Enviar email"</strong>.</li>
+                    <li><strong style="color: var(--netflix-red);">Recomendado:</strong> "Estoy de Viaje"</li>
+                    <li>Otra opción: "Actualizar hogar"</li>
+                    <li>Selecciona "Enviar email"</li>
                 </ul>
                 <div class="tutorial-success">
-                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
+                    ✅ Luego busca el correo aquí
                 </div>
                 <div class="tutorial-nav">
                     <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
-                    <button class="btn-next" onclick="showStep('step3')">Listo</button>
+                    <button class="btn-next" onclick="showStep('step3')">Siguiente</button>
                 </div>
             </div>
 
             <div class="tutorial-step" id="step2-mobile">
                 <h3>📱 Instrucciones para Móvil</h3>
-                <p style="color: #aaa;">En tu dispositivo móvil u otros, verás una pantalla similar a esta:</p>
+                <p style="color: #aaa;">En tu dispositivo:</p>
                 <ul>
-                    <li>Presiona <strong>"Ver Temporalmente"</strong>.</li>
-                    <li>Selecciona <strong>"Enviar email"</strong>.</li>
+                    <li>Presiona "Ver Temporalmente"</li>
+                    <li>Selecciona "Enviar email"</li>
                 </ul>
                 <div class="tutorial-success">
-                    ✅ Cuando hayas enviado el email, presiona el botón "Listo".
+                    ✅ Luego busca el correo aquí
                 </div>
                 <div class="tutorial-nav">
                     <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
-                    <button class="btn-next" onclick="showStep('step3')">Listo</button>
+                    <button class="btn-next" onclick="showStep('step3')">Siguiente</button>
                 </div>
             </div>
 
             <div class="tutorial-step" id="step3">
-                <h3>✅ Perfecto</h3>
-                <p style="color: #aaa;">Ahora recibirás un correo de Netflix con un <strong style="color: var(--netflix-green);">link que contiene el código de 4 dígitos</strong> para verificar tu dispositivo.</p>
-                <p style="color: #aaa; margin-top: 15px;">Si estás en TV y elegiste "Actualizar hogar", recibirás un link de verificación directo.</p>
-                <p style="color: #aaa; margin-top: 20px;">Regresa a la página principal e ingresa tu correo para consultar el link automáticamente.</p>
+                <h3>✅ Listo</h3>
+                <p style="color: #aaa;">Recibirás un correo con el <strong style="color: var(--netflix-red);">código de 4 dígitos</strong> o un link de verificación.</p>
                 <div class="tutorial-warning">
-                    ⚠️ <strong>Importante:</strong> Este enlace vence en 15 minutos.
-                </div>
-                <div class="tutorial-success" style="margin-top: 15px;">
-                    ⏱️ El sistema busca correos recibidos en los últimos 15 minutos.
+                    ⚠️ <strong>Importante:</strong> El enlace expira en 15 minutos.
                 </div>
                 <div class="tutorial-nav">
                     <button class="btn-prev" onclick="showStep('step1')">← Volver</button>
@@ -266,79 +453,108 @@
         </div>
     </div>
 
-    <div class="fyis-card">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="color: var(--netflix-green); margin:0; font-size: 1.6rem; letter-spacing: 1px;">🎬 CÓDIGOS NETFLIX</h2>
-            <a href="/logout" style="color:var(--netflix-red); text-decoration:none; font-size:0.85rem; font-weight: bold; border-bottom: 1px solid var(--netflix-red);">Salir</a>
-        </div>
-        <form method="POST" class="search-form">
-            <div class="search-input-group">
-                <input type="email" name="email" class="fyis-input" placeholder="Ingresa el correo de la cuenta Netflix..." value="{{ last_email if last_email else '' }}" required>
-                <button type="submit" class="btn-buscar">BUSCAR</button>
+    <div class="dashboard-container">
+        <!-- Panel de búsqueda izquierdo -->
+        <div class="search-panel">
+            <div class="panel-header">
+                <h1 class="panel-title">🎬 FyisBot</h1>
+                <a href="/logout" class="logout-btn">Salir</a>
             </div>
-            {% if last_email %}
-                <button type="submit" class="btn-actualizar">
-                    <span>🔄</span> ACTUALIZAR BANDEJA
+            
+            <form method="POST" class="search-form">
+                <label class="form-label">Correo de la cuenta Netflix:</label>
+                <input type="email" name="email" class="search-input" 
+                       placeholder="ejemplo@correo.com" 
+                       value="{{ last_email if last_email else '' }}" 
+                       required>
+                
+                <button type="submit" class="search-btn">
+                    🔍 Buscar Correos
                 </button>
-            {% endif %}
-        </form>
-    </div>
-
-    {% if mails %}
-    <div class="inbox-container">
-        <div class="inbox-header">
-            <div class="inbox-title">
-                📬 Bandeja de Entrada
-                <span class="inbox-count">{{ mails|length }} correo{{ 's' if mails|length != 1 else '' }}</span>
+                
+                {% if last_email %}
+                <button type="submit" class="refresh-btn">
+                    <span>🔄</span>
+                    <span>Actualizar</span>
+                </button>
+                {% endif %}
+            </form>
+            
+            <div class="info-box">
+                <strong>💡 Información</strong><br>
+                • El sistema busca correos de Netflix<br>
+                • Muestra códigos de verificación<br>
+                • Los links expiran en 15 minutos<br>
+                • Auto-actualización cada 30 segundos
             </div>
         </div>
-        <div class="inbox-body">
-            {% for m in mails %}
-            <div class="mail-row">
-                <div class="mail-row-header">
-                    <div class="mail-subject-text">{{ m.subject }}</div>
-                    <div class="mail-date-text">🕐 {{ m.date }}</div>
+        
+        <!-- Panel de resultados derecho -->
+        <div class="results-panel">
+            {% if mails %}
+                <div class="inbox-header">
+                    <div class="inbox-title">
+                        📬 Bandeja de Entrada
+                        <span class="inbox-count">{{ mails|length }}</span>
+                    </div>
                 </div>
-                <div class="mail-preview">
-                    Correo de verificación de Netflix • {{ m.bandeja }}
-                </div>
-                <div class="mail-actions">
-                    {% if m.link %}
-                        <a href="{{ m.link }}" target="_blank" class="mail-link-btn">
-                            🔗 Abrir Link de Verificación
-                        </a>
-                        {% if m.expiracion.expirado %}
-                            <span class="mail-status status-expired">
-                                ⚠️ Link expirado
-                            </span>
-                        {% elif m.expiracion.minutos_restantes <= 5 %}
-                            <span class="mail-status status-expiring">
-                                ⏱️ Expira en {{ m.expiracion.minutos_restantes }} min
-                            </span>
+                
+                {% for m in mails %}
+                <div class="mail-card" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                    <div class="mail-header">
+                        <div class="mail-subject">{{ m.subject }}</div>
+                        <div class="mail-date">🕐 {{ m.date }}</div>
+                    </div>
+                    <div class="mail-preview">
+                        Netflix • {{ m.bandeja }}
+                    </div>
+                    <div class="mail-actions">
+                        {% if m.link %}
+                            <a href="{{ m.link }}" target="_blank" class="mail-link-btn">
+                                🔗 Abrir Verificación
+                            </a>
+                            {% if m.expiracion.expirado %}
+                                <span class="mail-status status-expired">
+                                    ⚠️ Expirado
+                                </span>
+                            {% elif m.expiracion.minutos_restantes <= 5 %}
+                                <span class="mail-status status-expiring">
+                                    ⏱️ {{ m.expiracion.minutos_restantes }} min
+                                </span>
+                            {% else %}
+                                <span class="mail-status status-valid">
+                                    ✓ {{ m.expiracion.minutos_restantes }} min
+                                </span>
+                            {% endif %}
                         {% else %}
-                            <span class="mail-status status-valid">
-                                ✓ Válido por {{ m.expiracion.minutos_restantes }} min
+                            <span class="mail-status status-expired">
+                                ❌ Sin link
                             </span>
                         {% endif %}
-                    {% else %}
-                        <span class="mail-status status-expired">
-                            ❌ No se encontró link
-                        </span>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
+                
+            {% elif busqueda %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h2 class="empty-title">No hay correos</h2>
+                    <p class="empty-message">
+                        No se encontraron correos de Netflix para <strong>{{ last_email }}</strong>
+                    </p>
+                </div>
+                
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">🎬</div>
+                    <h2 class="empty-title">Bienvenido a FyisBot</h2>
+                    <p class="empty-message">
+                        Ingresa un correo en el panel izquierdo para buscar códigos de Netflix
+                    </p>
+                </div>
+            {% endif %}
         </div>
     </div>
-    {% elif busqueda %}
-    <div class="inbox-container">
-        <div class="empty-inbox">
-            <div class="empty-inbox-icon">📭</div>
-            <h3 style="color: #888; margin: 0 0 10px 0;">No se encontraron correos</h3>
-            <p style="color: #666; margin: 0;">No hay correos de Netflix para <strong>{{ last_email }}</strong> en las últimas 24 horas.</p>
-        </div>
-    </div>
-    {% endif %}
 
     <script>
         // Tutorial functions
@@ -357,17 +573,13 @@
             document.getElementById(stepId).classList.add('active');
         }
 
-        // Auto-refresh cada 30 segundos si hay correo buscado
+        // Auto-refresh
         {% if last_email and mails %}
         let refreshInterval = setInterval(() => {
             const form = document.querySelector('form');
-            if (form) {
-                console.log('Auto-actualizando bandeja...');
-                form.submit();
-            }
-        }, 30000); // 30 segundos
+            if (form) form.submit();
+        }, 30000);
 
-        // Detener auto-refresh si el usuario sale de la página
         window.addEventListener('beforeunload', () => {
             clearInterval(refreshInterval);
         });

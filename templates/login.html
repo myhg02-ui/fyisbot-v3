@@ -7,22 +7,24 @@
     <link rel="icon" href="{{ url_for('static', filename='plant.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        /* Estilos minimalistas para login */
+        body {
+            background: #141414;
+        }
+        
         .login-logo {
             font-size: 3rem;
             margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(70, 211, 105, 0.4);
         }
         
         .login-title {
-            color: #46d369;
+            color: #e50914;
             margin: 0 0 10px 0;
             font-size: 2rem;
             font-weight: 700;
         }
         
         .login-subtitle {
-            color: #aaa;
+            color: #999;
             margin: 0 0 30px 0;
             font-size: 0.95rem;
         }
@@ -31,7 +33,7 @@
             background: rgba(229, 9, 20, 0.15);
             border: 1px solid rgba(229, 9, 20, 0.5);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin: 0 0 20px 0;
             color: #ff6666;
             display: flex;
@@ -57,10 +59,6 @@
             <input type="text" name="token" class="fyis-input" placeholder="Token de acceso..." required autofocus autocomplete="off">
             <button type="submit" class="fyis-btn">INGRESAR</button>
         </form>
-        
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 0.85rem;">
-            <p style="margin: 0;">🔐 Token Admin: <code style="color: #888;">152028</code></p>
-        </div>
     </div>
 </body>
 </html>
