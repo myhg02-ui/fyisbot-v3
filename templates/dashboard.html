@@ -630,18 +630,18 @@
             <div class="search-area">
                 <h2 class="search-title">🔍 Buscar Códigos</h2>
                 
-                <form id="searchForm" class="search-form">
+                <form method="POST" id="searchForm" class="search-form">
                     <div class="input-group">
                         <label class="input-label">Selecciona el correo:</label>
                         <select name="email" id="emailSelect" class="input-field" required>
                             <option value="">-- Selecciona un correo --</option>
-                            <option value="karolombardi@mypemx.com">karolombardi@mypemx.com</option>
-                            <option value="eduardo@mypemx.com">eduardo@mypemx.com</option>
-                            <option value="netflix00800@mypemx.com">netflix00800@mypemx.com</option>
-                            <option value="netflix09002@mypemx.com">netflix09002@mypemx.com</option>
-                            <option value="netflix66333@mypemx.com">netflix66333@mypemx.com</option>
-                            <option value="netflix8330@mypemx.com">netflix8330@mypemx.com</option>
-                            <option value="netflix7473@mypemx.com">netflix7473@mypemx.com</option>
+                            <option value="karolombardi@mypemx.com" {{ 'selected' if last_email == 'karolombardi@mypemx.com' else '' }}>karolombardi@mypemx.com</option>
+                            <option value="eduardo@mypemx.com" {{ 'selected' if last_email == 'eduardo@mypemx.com' else '' }}>eduardo@mypemx.com</option>
+                            <option value="netflix00800@mypemx.com" {{ 'selected' if last_email == 'netflix00800@mypemx.com' else '' }}>netflix00800@mypemx.com</option>
+                            <option value="netflix09002@mypemx.com" {{ 'selected' if last_email == 'netflix09002@mypemx.com' else '' }}>netflix09002@mypemx.com</option>
+                            <option value="netflix66333@mypemx.com" {{ 'selected' if last_email == 'netflix66333@mypemx.com' else '' }}>netflix66333@mypemx.com</option>
+                            <option value="netflix8330@mypemx.com" {{ 'selected' if last_email == 'netflix8330@mypemx.com' else '' }}>netflix8330@mypemx.com</option>
+                            <option value="netflix7473@mypemx.com" {{ 'selected' if last_email == 'netflix7473@mypemx.com' else '' }}>netflix7473@mypemx.com</option>
                         </select>
                     </div>
                     
@@ -722,81 +722,20 @@
     </div>
 
     <script>
-        // Búsqueda AJAX sin recargar página
-        document.getElementById('searchForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
+        // Mostrar loading al enviar el formulario (método tradicional)
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
             const email = document.getElementById('emailSelect').value;
-            const searchBtn = document.getElementById('searchBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const inboxContent = document.getElementById('inboxContent');
             
             if (!email) {
+                e.preventDefault();
                 alert('Por favor selecciona un correo');
                 return;
             }
             
-            // Mostrar loading
-            loadingOverlay.classList.add('active');
-            searchBtn.disabled = true;
-            searchBtn.textContent = 'Buscando...';
-            
-            try {
-                // Enviar petición POST tradicional
-                const formData = new URLSearchParams();
-                formData.append('email', email);
-                
-                const response = await fetch('/dashboard', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData
-                });
-                
-                if (response.ok) {
-                    const html = await response.text();
-                    
-                    // Crear un elemento temporal para parsear el HTML
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = html;
-                    
-                    // Extraer el contenido de inboxContent
-                    const newContent = tempDiv.querySelector('#inboxContent');
-                    
-                    if (newContent) {
-                        // Reemplazar el contenido
-                        inboxContent.innerHTML = newContent.innerHTML;
-                    } else {
-                        // Si no hay contenido, mostrar mensaje
-                        inboxContent.innerHTML = `
-                            <div class="empty-state">
-                                <div class="empty-icon">📭</div>
-                                <h3 class="empty-title">No hay correos</h3>
-                                <p class="empty-text">No se encontraron correos para ${email}</p>
-                            </div>
-                        `;
-                    }
-                } else {
-                    throw new Error('Error en la respuesta');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                inboxContent.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">⚠️</div>
-                        <h3 class="empty-title">Error</h3>
-                        <p class="empty-text">No se pudo buscar correos. Intenta de nuevo.</p>
-                    </div>
-                `;
-            } finally {
-                // Ocultar loading después de un breve delay
-                setTimeout(() => {
-                    loadingOverlay.classList.remove('active');
-                    searchBtn.disabled = false;
-                    searchBtn.textContent = 'Buscar';
-                }, 800);
-            }
+            // Mostrar loading overlay
+            document.getElementById('loadingOverlay').classList.add('active');
+            document.getElementById('searchBtn').disabled = true;
+            document.getElementById('searchBtn').textContent = 'Buscando...';
         });
         
         // Tutorial functions        <h3 class="empty-title">Bandeja de Correos</h3>
