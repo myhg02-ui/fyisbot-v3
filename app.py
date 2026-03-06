@@ -204,7 +204,6 @@ def login():
             session['auth'] = True
             session['is_admin'] = False
             session['token'] = token
-            guardar_tokens()  # Guardar el contador actualizado
             return redirect(url_for('dashboard'))
         else:
             return render_template('login.html', error="Token inválido")
