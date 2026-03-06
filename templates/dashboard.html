@@ -690,7 +690,7 @@
                         {% endif %}
                         
                         <div class="mail-actions">
-                            {% if m.link %}
+                            {% if m.link and not m.codigo %}
                                 <a href="{{ m.link }}" target="_blank" class="open-link">
                                     🔗 Abrir Link
                                 </a>
