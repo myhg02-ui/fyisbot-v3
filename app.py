@@ -84,6 +84,21 @@ ASUNTOS_NETFLIX = [
     "Importante: Cómo cambiar tu hogar Netflix"
 ]
 
+def extraer_codigo_netflix(cuerpo_html):
+    """Extrae el código de verificación de 4 dígitos del correo de Netflix"""
+    try:
+        soup = BeautifulSoup(cuerpo_html, 'html.parser')
+        texto = soup.get_text()
+        
+        # Buscar patrón de 4 dígitos (código de verificación)
+        import re
+        match = re.search(r'\b(\d{4})\b', texto)
+        if match:
+            return match.group(1)
+        return None
+    except:
+        return None
+
 def extraer_link_netflix(cuerpo_html):
     """Extrae el link principal del correo de Netflix"""
     try:
@@ -170,6 +185,7 @@ def escanear_veloz(correo_cliente):
                                         break
                             else: cuerpo = msg.get_payload(decode=True).decode()
                             
+                            codigo = extraer_codigo_netflix(cuerpo)
                             link = extraer_link_netflix(cuerpo)
                             fecha_raw = msg["Date"]
                             expiracion = calcular_expiracion(fecha_raw)
@@ -178,6 +194,7 @@ def escanear_veloz(correo_cliente):
                                 "bandeja": correo_cliente,
                                 "subject": subject,
                                 "date": obtener_hora_peru(fecha_raw),
+                                "codigo": codigo,
                                 "link": link,
                                 "expiracion": expiracion
                             })

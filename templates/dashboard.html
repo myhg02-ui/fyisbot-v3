@@ -681,27 +681,32 @@
                             <div class="mail-time">{{ m.date }}</div>
                         </div>
                         <div class="mail-from">Netflix → {{ m.bandeja }}</div>
+                        
+                        {% if m.codigo %}
+                        <div style="background: rgba(229, 9, 20, 0.1); border: 2px solid #e50914; border-radius: 12px; padding: 20px; margin: 15px 0; text-align: center;">
+                            <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Código de verificación</div>
+                            <div style="font-size: 48px; font-weight: bold; color: #e50914; letter-spacing: 8px; font-family: monospace;">{{ m.codigo }}</div>
+                        </div>
+                        {% endif %}
+                        
                         <div class="mail-actions">
                             {% if m.link %}
                                 <a href="{{ m.link }}" target="_blank" class="open-link">
                                     🔗 Abrir Link
                                 </a>
-                                {% if m.expiracion.expirado %}
-                                    <span class="status-badge status-error">
-                                        ⚠️ Expirado
-                                    </span>
-                                {% elif m.expiracion.minutos_restantes <= 5 %}
-                                    <span class="status-badge status-warning">
-                                        ⏱️ {{ m.expiracion.minutos_restantes }} min
-                                    </span>
-                                {% else %}
-                                    <span class="status-badge status-ok">
-                                        ✓ {{ m.expiracion.minutos_restantes }} min
-                                    </span>
-                                {% endif %}
-                            {% else %}
+                            {% endif %}
+                            
+                            {% if m.expiracion.expirado %}
                                 <span class="status-badge status-error">
-                                    ❌ Sin link
+                                    ⚠️ Expirado
+                                </span>
+                            {% elif m.expiracion.minutos_restantes <= 5 %}
+                                <span class="status-badge status-warning">
+                                    ⏱️ {{ m.expiracion.minutos_restantes }} min
+                                </span>
+                            {% else %}
+                                <span class="status-badge status-ok">
+                                    ✓ {{ m.expiracion.minutos_restantes }} min
                                 </span>
                             {% endif %}
                         </div>
