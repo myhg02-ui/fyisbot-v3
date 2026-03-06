@@ -666,16 +666,19 @@
                 <div class="loading-text">Buscando correos...</div>
             </div>
             
-            <div id="inboxContent">
-            {% if mails %}
-                <div class="inbox-header">
-                    <div class="inbox-title">
-                        📬 Bandeja
-                        <span class="count-badge">{{ mails|length }}</span>
-                    </div>
+            <!-- Header siempre visible -->
+            <div class="inbox-header">
+                <div class="inbox-title">
+                    📬 Bandeja
+                    {% if mails %}
+                    <span class="count-badge">{{ mails|length }}</span>
+                    {% endif %}
                 </div>
-                
-                <div class="inbox-body">
+            </div>
+            
+            <!-- Body con scroll -->
+            <div class="inbox-body" id="inboxContent">
+            {% if mails %}
                     {% for m in mails %}
                     <div class="mail-card">
                         <div class="mail-top">
@@ -714,7 +717,6 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
                 
             {% elif error_email %}
                 <div class="empty-state">
@@ -727,6 +729,12 @@
                     <div class="empty-icon">📭</div>
                     <h3 class="empty-title">No hay correos</h3>
                     <p class="empty-text">No se encontraron correos para esta cuenta</p>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📬</div>
+                    <h3 class="empty-title">Bandeja de Correos</h3>
+                    <p class="empty-text">Ingresa un correo en el panel izquierdo para buscar</p>
                 </div>
             {% endif %}
             </div>
