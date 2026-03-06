@@ -22,7 +22,10 @@ MAPEO_CORREOS = {
     "netflix09002@mypemx.com": "hgm2748@gmail.com",
     "netflix66333@mypemx.com": "hgm2748@gmail.com",
     "netflix8330@mypemx.com": "mhg91984@gmail.com",
-    "netflix7473@mypemx.com": "mhg91984@gmail.com"
+    "netflix7473@mypemx.com": "mhg91984@gmail.com",
+    # Agregar los Gmail directamente también
+    "hgm2748@gmail.com": "hgm2748@gmail.com",
+    "mhg91984@gmail.com": "mhg91984@gmail.com"
 }
 
 # Archivo para persistir tokens
