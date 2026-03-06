@@ -632,17 +632,16 @@
                 
                 <form method="POST" id="searchForm" class="search-form">
                     <div class="input-group">
-                        <label class="input-label">Selecciona el correo:</label>
-                        <select name="email" id="emailSelect" class="input-field" required>
-                            <option value="">-- Selecciona un correo --</option>
-                            <option value="karolombardi@mypemx.com" {{ 'selected' if last_email == 'karolombardi@mypemx.com' else '' }}>karolombardi@mypemx.com</option>
-                            <option value="eduardo@mypemx.com" {{ 'selected' if last_email == 'eduardo@mypemx.com' else '' }}>eduardo@mypemx.com</option>
-                            <option value="netflix00800@mypemx.com" {{ 'selected' if last_email == 'netflix00800@mypemx.com' else '' }}>netflix00800@mypemx.com</option>
-                            <option value="netflix09002@mypemx.com" {{ 'selected' if last_email == 'netflix09002@mypemx.com' else '' }}>netflix09002@mypemx.com</option>
-                            <option value="netflix66333@mypemx.com" {{ 'selected' if last_email == 'netflix66333@mypemx.com' else '' }}>netflix66333@mypemx.com</option>
-                            <option value="netflix8330@mypemx.com" {{ 'selected' if last_email == 'netflix8330@mypemx.com' else '' }}>netflix8330@mypemx.com</option>
-                            <option value="netflix7473@mypemx.com" {{ 'selected' if last_email == 'netflix7473@mypemx.com' else '' }}>netflix7473@mypemx.com</option>
-                        </select>
+                        <label class="input-label">Ingresa tu correo:</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="emailInput" 
+                            class="input-field" 
+                            placeholder="ejemplo@mypemx.com"
+                            value="{{ last_email or '' }}"
+                            required
+                        >
                     </div>
                     
                     <button type="submit" class="submit-btn" id="searchBtn">Buscar</button>
@@ -710,11 +709,17 @@
                     {% endfor %}
                 </div>
                 
+            {% elif error_email %}
+                <div class="empty-state">
+                    <div class="empty-icon">🚫</div>
+                    <h3 class="empty-title">Correo no autorizado</h3>
+                    <p class="empty-text">{{ error_email }}</p>
+                </div>
             {% elif busqueda %}
                 <div class="empty-state">
                     <div class="empty-icon">📭</div>
                     <h3 class="empty-title">No hay correos</h3>
-                    <p class="empty-text">Selecciona un correo en el panel izquierdo</p>
+                    <p class="empty-text">No se encontraron correos para esta cuenta</p>
                 </div>
             {% endif %}
             </div>
@@ -724,11 +729,11 @@
     <script>
         // Mostrar loading al enviar el formulario (método tradicional)
         document.getElementById('searchForm').addEventListener('submit', function(e) {
-            const email = document.getElementById('emailSelect').value;
+            const email = document.getElementById('emailInput').value;
             
             if (!email) {
                 e.preventDefault();
-                alert('Por favor selecciona un correo');
+                alert('Por favor ingresa un correo');
                 return;
             }
             

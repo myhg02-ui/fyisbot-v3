@@ -267,11 +267,19 @@ def dashboard():
     mails = []
     busqueda_realizada = False
     last_email = None
+    error_email = None
+    
     if request.method == 'POST':
         busqueda_realizada = True
-        last_email = request.form.get('email')
-        mails = escanear_veloz(last_email)
-    return render_template('dashboard.html', mails=mails, busqueda=busqueda_realizada, last_email=last_email)
+        last_email = request.form.get('email', '').strip().lower()
+        
+        # Validar que el correo esté en la lista permitida
+        if last_email not in MAPEO_CORREOS:
+            error_email = "Este correo no está en nuestra lista de cuentas autorizadas"
+        else:
+            mails = escanear_veloz(last_email)
+    
+    return render_template('dashboard.html', mails=mails, busqueda=busqueda_realizada, last_email=last_email, error_email=error_email)
 
 @app.route('/logout')
 def logout():
