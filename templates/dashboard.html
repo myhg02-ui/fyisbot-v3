@@ -228,12 +228,14 @@
         .inbox-body {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 20px 30px;
+            min-height: 0; /* Importante para que flex funcione con scroll */
         }
         
         /* Scroll personalizado */
         .inbox-body::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
         
         .inbox-body::-webkit-scrollbar-track {
@@ -241,12 +243,12 @@
         }
         
         .inbox-body::-webkit-scrollbar-thumb {
-            background: rgba(229, 9, 20, 0.5);
-            border-radius: 4px;
+            background: rgba(229, 9, 20, 0.6);
+            border-radius: 5px;
         }
         
         .inbox-body::-webkit-scrollbar-thumb:hover {
-            background: rgba(229, 9, 20, 0.7);
+            background: rgba(229, 9, 20, 0.8);
         }
         
         /* Tarjetas de correo */
